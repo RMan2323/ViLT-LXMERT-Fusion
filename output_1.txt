@@ -1,0 +1,35 @@
+$ HF_HOME=/media/user/VQA_Raghuveer_Priyanshu/hf_cache python3 train_fusion_vqa.py
+Using device: cuda
+/media/user/VQA_Raghuveer_Priyanshu/vqa_dataset.py:11: DtypeWarning: Columns (6) have mixed types. Specify dtype option on import or set low_memory=False.
+  self.data = pd.read_csv(csv_path)
+Some weights of the model checkpoint at unc-nlp/lxmert-base-uncased were not used when initializing LxmertModel: ['answer_head.logit_fc.0.bias', 'answer_head.logit_fc.0.weight', 'answer_head.logit_fc.2.bias', 'answer_head.logit_fc.2.weight', 'answer_head.logit_fc.3.bias', 'answer_head.logit_fc.3.weight', 'cls.predictions.bias', 'cls.predictions.decoder.weight', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.dense.weight', 'cls.seq_relationship.bias', 'cls.seq_relationship.weight', 'obj_predict_head.decoder_dict.attr.bias', 'obj_predict_head.decoder_dict.attr.weight', 'obj_predict_head.decoder_dict.feat.bias', 'obj_predict_head.decoder_dict.feat.weight', 'obj_predict_head.decoder_dict.obj.bias', 'obj_predict_head.decoder_dict.obj.weight', 'obj_predict_head.transform.LayerNorm.bias', 'obj_predict_head.transform.LayerNorm.weight', 'obj_predict_head.transform.dense.bias', 'obj_predict_head.transform.dense.weight']
+- This IS expected if you are initializing LxmertModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing LxmertModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+🔹 Loading pretrained weights from checkpoints/vilt_vqa.ckpt
+⚡ Detected PyTorch Lightning checkpoint — extracting weights...
+✅ Loaded pretrained weights from checkpoints/vilt_vqa.ckpt
+Epoch 1/5:   0%|                                                                                                                                                                   | 0/250 [00:00<?, ?it/s]It looks like you are trying to rescale already rescaled images. If the input images have pixel values between 0 and 1, set `do_rescale=False` to avoid rescaling them again.
+/media/user/VQA_Raghuveer_Priyanshu/train_fusion_vqa.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  labels = torch.tensor(batch["answer_idx"], dtype=torch.long).to(device)
+Epoch 1/5: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:52<00:00,  4.76it/s]
+✅ Epoch 1/5 | Loss: 4.0435
+💾 Saved checkpoint: checkpoints/last_epoch.ckpt
+🏆 New best model saved: checkpoints/best_model.ckpt (loss=4.0435)
+Epoch 2/5: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:58<00:00,  4.29it/s]
+✅ Epoch 2/5 | Loss: 3.0819
+💾 Saved checkpoint: checkpoints/last_epoch.ckpt
+🏆 New best model saved: checkpoints/best_model.ckpt (loss=3.0819)
+Epoch 3/5: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:57<00:00,  4.35it/s]
+✅ Epoch 3/5 | Loss: 2.7612
+💾 Saved checkpoint: checkpoints/last_epoch.ckpt
+🏆 New best model saved: checkpoints/best_model.ckpt (loss=2.7612)
+Epoch 4/5: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:53<00:00,  4.69it/s]
+✅ Epoch 4/5 | Loss: 2.5567
+💾 Saved checkpoint: checkpoints/last_epoch.ckpt
+🏆 New best model saved: checkpoints/best_model.ckpt (loss=2.5567)
+Epoch 5/5: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 250/250 [00:52<00:00,  4.80it/s]
+✅ Epoch 5/5 | Loss: 2.3718
+💾 Saved checkpoint: checkpoints/last_epoch.ckpt
+🏆 New best model saved: checkpoints/best_model.ckpt (loss=2.3718)
+🎉 Training complete.
+

@@ -6,11 +6,13 @@ from PIL import Image
 from transformers import ViltProcessor, LxmertTokenizer
 from torchvision import transforms
 
+max_question_length = max(len(q.split()) for q in self.data["question"])
+
 class VQADataset(Dataset):
     def __init__(self, csv_path, image_root, max_samples=None):
-        self.data = pd.read_csv(csv_path)
+        self.data = pd.read_csv(csv_path, low_memory=False)
         if max_samples:
-            self.data = self.data.sample(max_samples, random_state=42).reset_index(drop=True)
+            self.data = self.data.sample(max_samples).reset_index(drop=True)
 
         self.image_root = image_root
 
@@ -46,10 +48,11 @@ class VQADataset(Dataset):
         vilt_inputs = self.vilt_processor(
             images=image,
             text=question,
+            do_rescale=False,
             return_tensors="pt",
             padding="max_length",
             truncation=True,
-            max_length=32
+            max_length=max_question_length
         )
 
         # ✅ LXMERT text encoding
@@ -57,7 +60,7 @@ class VQADataset(Dataset):
             question,
             padding="max_length",
             truncation=True,
-            max_length=32,
+            max_length=max_question_length,
             return_tensors="pt"
         )
 
