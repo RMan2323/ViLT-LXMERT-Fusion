@@ -41,7 +41,7 @@ DATASET_CSV = "Dataset/dataset_train2014_filtered.csv" # Changing to Dataset/dat
 IMAGE_ROOT = "Dataset/train2014/"
 FEATURE_DIR = "extracted_feats"   # where your .pt features are saved
 NUM_ANSWERS = 1000
-MAX_SAMPLES = 100   # keep small and reproducible for tests (Priyanshu wanted 100)
+MAX_SAMPLES = 876   # keep small and reproducible for tests (Priyanshu wanted 100)
 
 # === Checkpoint paths ===
 os.makedirs("checkpoints", exist_ok=True)

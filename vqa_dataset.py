@@ -7,7 +7,7 @@ from transformers import ViltProcessor, LxmertTokenizer
 from torchvision import transforms
 import torch
 
-max_question_length = 32
+# max_question_length = 32
 
 class VQADataset(Dataset):
     """
@@ -34,6 +34,10 @@ class VQADataset(Dataset):
             transforms.Resize((384, 384)),
             transforms.ToTensor(),
         ])
+        # TODO get max_length after iterating through questions
+        self.max_question_length = max(len(q.split()) for q in self.data["question"])
+
+
 
     def __len__(self):
         return len(self.data)
@@ -123,7 +127,7 @@ class VQADataset(Dataset):
             return_tensors="pt",
             padding="max_length",
             truncation=True,
-            max_length=max_question_length
+            max_length=self.max_question_length
         )
 
         # LXMERT text encoding
@@ -131,7 +135,7 @@ class VQADataset(Dataset):
             question,
             padding="max_length",
             truncation=True,
-            max_length=max_question_length,
+            max_length=self.max_question_length,
             return_tensors="pt"
         )
 
