@@ -19,8 +19,21 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.hidden_dim = hidden_dim
 
         # Load pretrained encoders
+        # === Load pretrained encoders ===
         self.vilt = ViltModel.from_pretrained("dandelin/vilt-b32-mlm")
         self.lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased")
+
+        # === Load Priyanshu's fine-tuned checkpoints ===
+        try:
+            vilt_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
+            lxmert_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
+            self.vilt.load_state_dict(vilt_ckpt["vilt_state"], strict=False)
+            self.lxmert.load_state_dict(lxmert_ckpt["lxmert_state"], strict=False)
+            print("✅ Loaded fine-tuned ViLT & LXMERT encoder weights.")
+        except Exception as e:
+            print(f"⚠️ Could not load fine-tuned encoder weights: {e}")
+            print("→ Falling back to pretrained encoders.")
+
 
         # Freeze encoders by default for low memory usage
         if freeze_encoders:
@@ -33,12 +46,24 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.vilt_to_lxmert_proj = nn.Linear(hidden_dim, self.project_to_dim)
 
         # Fusion + Classification Head
+        # self.fusion = nn.Sequential(
+        #     nn.Linear(2 * hidden_dim, fusion_dim),
+        #     nn.ReLU(),
+        #     nn.Dropout(0.3),
+        #     nn.Linear(fusion_dim, num_answers)
+        # )
+
         self.fusion = nn.Sequential(
-            nn.Linear(2 * hidden_dim, fusion_dim),
+            nn.Linear(2 * hidden_dim, 2048),
             nn.ReLU(),
             nn.Dropout(0.3),
-            nn.Linear(fusion_dim, num_answers)
+            nn.Linear(2048, 1024),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(1024, num_answers)
         )
+
+
 
     def _make_grid_boxes(self, batch_size, device):
         """
@@ -70,60 +95,44 @@ class ViLT_LXMERT_Fusion(nn.Module):
         boxes = boxes.unsqueeze(0).expand(batch_size, -1, -1)  # [B, num_regions, 4]
         return boxes
 
-    def forward(self, vilt_inputs, lxmert_inputs):
+    def forward(self, vilt_inputs, lxmert_inputs, visual_feats=None, visual_pos=None):
         """
-        Forward does:
-         - ViLT forward to get pooler_output (for ViLT embedding) and last_hidden_state (tokens)
-         - Build visual features for LXMERT by pooling ViLT tokens into num_regions
-         - Project pooled features to project_to_dim (e.g., 2048)
-         - Build visual_pos grid and pass both to LXMERT
-         - Late fusion of ViLT pooler_output and LXMERT pooled_output
+        Forward pass for ViLT + LXMERT fusion.
+        Priority:
+        1. Use external visual features (.pt) if provided.
+        2. Otherwise, generate pseudo-regions from ViLT tokens.
         """
-        # ===== ViLT forward (multimodal) =====
-        # Ensure ViLT returns last_hidden_state
+
+        # ===== ViLT forward (text + image) =====
         vilt_outputs = self.vilt(**vilt_inputs, return_dict=True, output_hidden_states=False)
-        # ViLT pooled multimodal embedding
         vilt_emb = vilt_outputs.pooler_output  # [B, 768]
 
-        # Get ViLT token embeddings (B, seq_len, 768). seq_len ~ 1 + 14*14 = 197
-        # Remove CLS token (index 0) to keep only patch tokens
-        last_hidden = None
-        if hasattr(vilt_outputs, "last_hidden_state"):
+        if visual_feats is None or visual_pos is None:
+            # ===== ViLT token-level feature pooling (fallback mode) =====
             last_hidden = vilt_outputs.last_hidden_state  # [B, seq_len, 768]
+            token_feats = last_hidden[:, 1:, :]  # drop CLS token
+
+            B, T, C = token_feats.shape
+            token_feats_t = token_feats.permute(0, 2, 1)
+            pooled = F.adaptive_avg_pool1d(token_feats_t, self.num_regions)
+            pooled = pooled.permute(0, 2, 1)
+            proj_feats = self.vilt_to_lxmert_proj(pooled)
+            visual_pos = self._make_grid_boxes(B, proj_feats.device)
         else:
-            # fallback: some ViLT variants might expose hidden_states; try to get final hidden state
-            raise RuntimeError("ViLT output missing last_hidden_state; update transformers package.")
+            # ===== Use real pre-extracted features (.pt) =====
+            proj_feats = visual_feats  # already [B, 36, 2048]
+            visual_pos = visual_pos
 
-        # drop CLS token
-        token_feats = last_hidden[:, 1:, :]  # [B, num_patches, 768], typically [B,196,768]
-
-        # ===== Pool token_feats to num_regions (e.g., 36) =====
-        # pool along token dimension using adaptive avg pool (via 1D pooling)
-        B, T, C = token_feats.shape
-        # reshape for pooling: (B, C, T)
-        token_feats_t = token_feats.permute(0, 2, 1)  # [B, C, T]
-        # Adaptive pool to num_regions -> (B, C, num_regions)
-        pooled = F.adaptive_avg_pool1d(token_feats_t, self.num_regions)  # [B, C, num_regions]
-        pooled = pooled.permute(0, 2, 1)  # [B, num_regions, C] where C==hidden_dim (768)
-
-        # ===== Project pooled features to LXMERT visual dim (e.g., 2048) =====
-        # Apply linear projection per region
-        proj_feats = self.vilt_to_lxmert_proj(pooled)  # [B, num_regions, project_to_dim]
-
-        # ===== Build visual_pos grid (normalized box coords) =====
-        batch_size = proj_feats.shape[0]
-        device = proj_feats.device
-        visual_pos = self._make_grid_boxes(batch_size, device)  # [B, num_regions, 4]
-
-        # ===== LXMERT forward with constructed visual_feats & visual_pos =====
+        # ===== LXMERT multimodal forward =====
         lxmert_outputs = self.lxmert(
             **lxmert_inputs,
             visual_feats=proj_feats,
-            visual_pos=visual_pos,
+            visual_pos=visual_pos
         )
         lxmert_emb = lxmert_outputs.pooled_output  # [B, 768]
 
-        # ===== Late fusion =====
-        combined = torch.cat([vilt_emb, lxmert_emb], dim=1)  # [B, 1536]
+        # ===== Late Fusion (concat ViLT + LXMERT embeddings) =====
+        combined = torch.cat([vilt_emb, lxmert_emb], dim=1)
         logits = self.fusion(combined)
+
         return logits

@@ -1,0 +1,258 @@
+Dataset/train2014/COCO_train2014_000000000250.jpg
+Dataset/train2014/COCO_train2014_000000001111.jpg
+Dataset/train2014/COCO_train2014_000000003692.jpg
+Dataset/train2014/COCO_train2014_000000004308.jpg
+Dataset/train2014/COCO_train2014_000000266518.jpg
+Dataset/train2014/COCO_train2014_000000267353.jpg
+Dataset/train2014/COCO_train2014_000000572025.jpg
+Dataset/train2014/COCO_train2014_000000401670.jpg
+Dataset/train2014/COCO_train2014_000000183617.jpg
+Dataset/train2014/COCO_train2014_000000010108.jpg
+Dataset/train2014/COCO_train2014_000000015404.jpg
+Dataset/train2014/COCO_train2014_000000409614.jpg
+Dataset/train2014/COCO_train2014_000000016449.jpg
+Dataset/train2014/COCO_train2014_000000411349.jpg
+Dataset/train2014/COCO_train2014_000000280879.jpg
+Dataset/train2014/COCO_train2014_000000022098.jpg
+Dataset/train2014/COCO_train2014_000000415659.jpg
+Dataset/train2014/COCO_train2014_000000069373.jpg
+Dataset/train2014/COCO_train2014_000000285717.jpg
+Dataset/train2014/COCO_train2014_000000548690.jpg
+Dataset/train2014/COCO_train2014_000000026266.jpg
+Dataset/train2014/COCO_train2014_000000035793.jpg
+Dataset/train2014/COCO_train2014_000000550869.jpg
+Dataset/train2014/COCO_train2014_000000158614.jpg
+Dataset/train2014/COCO_train2014_000000160034.jpg
+Dataset/train2014/COCO_train2014_000000162020.jpg
+Dataset/train2014/COCO_train2014_000000164999.jpg
+Dataset/train2014/COCO_train2014_000000202848.jpg
+Dataset/train2014/COCO_train2014_000000430665.jpg
+Dataset/train2014/COCO_train2014_000000038389.jpg
+Dataset/train2014/COCO_train2014_000000300929.jpg
+Dataset/train2014/COCO_train2014_000000432370.jpg
+Dataset/train2014/COCO_train2014_000000303287.jpg
+Dataset/train2014/COCO_train2014_000000045822.jpg
+Dataset/train2014/COCO_train2014_000000570207.jpg
+Dataset/train2014/COCO_train2014_000000047396.jpg
+Dataset/train2014/COCO_train2014_000000572585.jpg
+Dataset/train2014/COCO_train2014_000000445775.jpg
+Dataset/train2014/COCO_train2014_000000578819.jpg
+Dataset/train2014/COCO_train2014_000000227547.jpg
+Dataset/train2014/COCO_train2014_000000188832.jpg
+Dataset/train2014/COCO_train2014_000000577748.jpg
+Dataset/train2014/COCO_train2014_000000140922.jpg
+Dataset/train2014/COCO_train2014_000000452821.jpg
+Dataset/train2014/COCO_train2014_000000191661.jpg
+Dataset/train2014/COCO_train2014_000000454827.jpg
+Dataset/train2014/COCO_train2014_000000193732.jpg
+Dataset/train2014/COCO_train2014_000000064356.jpg
+Dataset/train2014/COCO_train2014_000000115654.jpg
+Dataset/train2014/COCO_train2014_000000505003.jpg
+Dataset/train2014/COCO_train2014_000000412704.jpg
+Dataset/train2014/COCO_train2014_000000405483.jpg
+Dataset/train2014/COCO_train2014_000000340375.jpg
+Dataset/train2014/COCO_train2014_000000077849.jpg
+Dataset/train2014/COCO_train2014_000000187882.jpg
+Dataset/train2014/COCO_train2014_000000209969.jpg
+Dataset/train2014/COCO_train2014_000000211439.jpg
+Dataset/train2014/COCO_train2014_000000217649.jpg
+Dataset/train2014/COCO_train2014_000000093994.jpg
+Dataset/train2014/COCO_train2014_000000365487.jpg
+Dataset/train2014/COCO_train2014_000000489343.jpg
+Dataset/train2014/COCO_train2014_000000489914.jpg
+Dataset/train2014/COCO_train2014_000000540476.jpg
+Dataset/train2014/COCO_train2014_000000097779.jpg
+Dataset/train2014/COCO_train2014_000000097785.jpg
+Dataset/train2014/COCO_train2014_000000491114.jpg
+Dataset/train2014/COCO_train2014_000000098679.jpg
+Dataset/train2014/COCO_train2014_000000405856.jpg
+Dataset/train2014/COCO_train2014_000000038561.jpg
+Dataset/train2014/COCO_train2014_000000102316.jpg
+Dataset/train2014/COCO_train2014_000000235529.jpg
+Dataset/train2014/COCO_train2014_000000498969.jpg
+Dataset/train2014/COCO_train2014_000000367998.jpg
+Dataset/train2014/COCO_train2014_000000127104.jpg
+Dataset/train2014/COCO_train2014_000000107918.jpg
+Dataset/train2014/COCO_train2014_000000242752.jpg
+Dataset/train2014/COCO_train2014_000000375096.jpg
+Dataset/train2014/COCO_train2014_000000114624.jpg
+Dataset/train2014/COCO_train2014_000000391200.jpg
+Dataset/train2014/COCO_train2014_000000558269.jpg
+Dataset/train2014/COCO_train2014_000000252996.jpg
+Dataset/train2014/COCO_train2014_000000516490.jpg
+Dataset/train2014/COCO_train2014_000000258450.jpg
+Dataset/train2014/COCO_train2014_000000108697.jpg
+Dataset/train2014/COCO_train2014_000000522527.jpg
+Dataset/train2014/COCO_train2014_000000391537.jpg
+Dataset/train2014/COCO_train2014_000000196701.jpg
+Dataset/train2014/COCO_train2014_000000020490.jpg
+Dataset/train2014/COCO_train2014_000000498371.jpg
+Dataset/Val2014/COCO_Val2014_000000209420.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000209420.jpg'
+Dataset/Val2014/COCO_Val2014_000000463628.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000463628.jpg'
+Dataset/Val2014/COCO_Val2014_000000381870.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000381870.jpg'
+Dataset/Val2014/COCO_Val2014_000000537939.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000537939.jpg'
+Dataset/Val2014/COCO_Val2014_000000399655.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000399655.jpg'
+Dataset/Val2014/COCO_Val2014_000000139555.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000139555.jpg'
+Dataset/Val2014/COCO_Val2014_000000000428.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000000428.jpg'
+Dataset/Val2014/COCO_Val2014_000000554838.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000554838.jpg'
+Dataset/Val2014/COCO_Val2014_000000087503.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000087503.jpg'
+Dataset/Val2014/COCO_Val2014_000000029170.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000029170.jpg'
+Dataset/Val2014/COCO_Val2014_000000425690.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000425690.jpg'
+Dataset/Val2014/COCO_Val2014_000000034754.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000034754.jpg'
+Dataset/Val2014/COCO_Val2014_000000488664.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000488664.jpg'
+Dataset/Val2014/COCO_Val2014_000000463901.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000463901.jpg'
+Dataset/Val2014/COCO_Val2014_000000249720.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000249720.jpg'
+Dataset/Val2014/COCO_Val2014_000000429505.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000429505.jpg'
+Dataset/Val2014/COCO_Val2014_000000389738.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000389738.jpg'
+Dataset/Val2014/COCO_Val2014_000000385779.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000385779.jpg'
+Dataset/Val2014/COCO_Val2014_000000502136.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000502136.jpg'
+Dataset/Val2014/COCO_Val2014_000000568318.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000568318.jpg'
+Dataset/Val2014/COCO_Val2014_000000272688.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000272688.jpg'
+Dataset/Val2014/COCO_Val2014_000000424464.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000424464.jpg'
+Dataset/Val2014/COCO_Val2014_000000241691.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000241691.jpg'
+Dataset/Val2014/COCO_Val2014_000000495020.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000495020.jpg'
+Dataset/Val2014/COCO_Val2014_000000176193.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000176193.jpg'
+Dataset/Val2014/COCO_Val2014_000000576927.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000576927.jpg'
+Dataset/Val2014/COCO_Val2014_000000066650.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000066650.jpg'
+Dataset/Val2014/COCO_Val2014_000000307995.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000307995.jpg'
+Dataset/Val2014/COCO_Val2014_000000098322.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000098322.jpg'
+Dataset/Val2014/COCO_Val2014_000000149909.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000149909.jpg'
+Dataset/Val2014/COCO_Val2014_000000135076.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000135076.jpg'
+Dataset/Val2014/COCO_Val2014_000000236762.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000236762.jpg'
+Dataset/Val2014/COCO_Val2014_000000319726.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000319726.jpg'
+Dataset/Val2014/COCO_Val2014_000000149155.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000149155.jpg'
+Dataset/Val2014/COCO_Val2014_000000342204.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000342204.jpg'
+Dataset/Val2014/COCO_Val2014_000000331236.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000331236.jpg'
+Dataset/Val2014/COCO_Val2014_000000410023.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000410023.jpg'
+Dataset/Val2014/COCO_Val2014_000000101031.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000101031.jpg'
+Dataset/Val2014/COCO_Val2014_000000336427.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000336427.jpg'
+Dataset/Val2014/COCO_Val2014_000000091545.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000091545.jpg'
+Dataset/Val2014/COCO_Val2014_000000209995.jpg - error: [Errno 2] No such file or directory: 'Dataset/Val2014/COCO_Val2014_000000209995.jpg'
+Dataset/train2014/COCO_train2014_000000000250.jpg
+Dataset/val2014/COCO_val2014_000000262284.jpg
+Dataset/train2014/COCO_train2014_000000001111.jpg
+Dataset/val2014/COCO_val2014_000000395185.jpg
+Dataset/val2014/COCO_val2014_000000568863.jpg
+Dataset/train2014/COCO_train2014_000000003692.jpg
+Dataset/train2014/COCO_train2014_000000004308.jpg
+Dataset/train2014/COCO_train2014_000000266518.jpg
+Dataset/train2014/COCO_train2014_000000267353.jpg
+Dataset/val2014/COCO_val2014_000000533896.jpg
+Dataset/val2014/COCO_val2014_000000402869.jpg
+Dataset/val2014/COCO_val2014_000000405104.jpg
+Dataset/train2014/COCO_train2014_000000572025.jpg
+Dataset/train2014/COCO_train2014_000000401670.jpg
+Dataset/train2014/COCO_train2014_000000183617.jpg
+Dataset/train2014/COCO_train2014_000000010108.jpg
+Dataset/val2014/COCO_val2014_000000419106.jpg
+Dataset/val2014/COCO_val2014_000000421673.jpg
+Dataset/train2014/COCO_train2014_000000015404.jpg
+Dataset/val2014/COCO_val2014_000000421970.jpg
+Dataset/train2014/COCO_train2014_000000409614.jpg
+Dataset/train2014/COCO_train2014_000000016449.jpg
+Dataset/val2014/COCO_val2014_000000556498.jpg
+Dataset/train2014/COCO_train2014_000000411349.jpg
+Dataset/train2014/COCO_train2014_000000280879.jpg
+Dataset/val2014/COCO_val2014_000000166260.jpg
+Dataset/train2014/COCO_train2014_000000022098.jpg
+Dataset/train2014/COCO_train2014_000000415659.jpg
+Dataset/val2014/COCO_val2014_000000173183.jpg
+Dataset/train2014/COCO_train2014_000000069373.jpg
+Dataset/train2014/COCO_train2014_000000285717.jpg
+Dataset/train2014/COCO_train2014_000000548690.jpg
+Dataset/val2014/COCO_val2014_000000309571.jpg
+Dataset/val2014/COCO_val2014_000000049255.jpg
+Dataset/train2014/COCO_train2014_000000026266.jpg
+Dataset/train2014/COCO_train2014_000000035793.jpg
+Dataset/train2014/COCO_train2014_000000550869.jpg
+Dataset/train2014/COCO_train2014_000000158614.jpg
+Dataset/train2014/COCO_train2014_000000160034.jpg
+Dataset/val2014/COCO_val2014_000000058636.jpg
+Dataset/val2014/COCO_val2014_000000451373.jpg
+Dataset/train2014/COCO_train2014_000000162020.jpg
+Dataset/val2014/COCO_val2014_000000192817.jpg
+Dataset/val2014/COCO_val2014_000000062805.jpg
+Dataset/train2014/COCO_train2014_000000164999.jpg
+Dataset/train2014/COCO_train2014_000000202848.jpg
+Dataset/train2014/COCO_train2014_000000430665.jpg
+Dataset/train2014/COCO_train2014_000000038389.jpg
+Dataset/train2014/COCO_train2014_000000300929.jpg
+Dataset/train2014/COCO_train2014_000000432370.jpg
+Dataset/val2014/COCO_val2014_000000209630.jpg
+Dataset/val2014/COCO_val2014_000000340781.jpg
+Dataset/val2014/COCO_val2014_000000079913.jpg
+Dataset/val2014/COCO_val2014_000000342335.jpg
+Dataset/val2014/COCO_val2014_000000344730.jpg
+Dataset/train2014/COCO_train2014_000000303287.jpg
+Dataset/val2014/COCO_val2014_000000345711.jpg
+Dataset/val2014/COCO_val2014_000000349579.jpg
+Dataset/val2014/COCO_val2014_000000350334.jpg
+Dataset/val2014/COCO_val2014_000000220739.jpg
+Dataset/train2014/COCO_train2014_000000045822.jpg
+Dataset/train2014/COCO_train2014_000000570207.jpg
+Dataset/val2014/COCO_val2014_000000224970.jpg
+Dataset/val2014/COCO_val2014_000000357948.jpg
+Dataset/val2014/COCO_val2014_000000489907.jpg
+Dataset/train2014/COCO_train2014_000000047396.jpg
+Dataset/train2014/COCO_train2014_000000572585.jpg
+Dataset/val2014/COCO_val2014_000000237860.jpg
+Dataset/val2014/COCO_val2014_000000108169.jpg
+Dataset/val2014/COCO_val2014_000000503483.jpg
+Dataset/train2014/COCO_train2014_000000445775.jpg
+Dataset/val2014/COCO_val2014_000000374727.jpg
+Dataset/val2014/COCO_val2014_000000433971.jpg
+Dataset/train2014/COCO_train2014_000000578819.jpg
+Dataset/train2014/COCO_train2014_000000227547.jpg
+Dataset/val2014/COCO_val2014_000000507686.jpg
+Dataset/val2014/COCO_val2014_000000381842.jpg
+Dataset/val2014/COCO_val2014_000000382333.jpg
+Dataset/train2014/COCO_train2014_000000188832.jpg
+Dataset/train2014/COCO_train2014_000000577748.jpg
+Dataset/train2014/COCO_train2014_000000140922.jpg
+Dataset/val2014/COCO_val2014_000000545006.jpg
+Dataset/train2014/COCO_train2014_000000452821.jpg
+Dataset/train2014/COCO_train2014_000000191661.jpg
+Dataset/train2014/COCO_train2014_000000454827.jpg
+Dataset/train2014/COCO_train2014_000000193732.jpg
+Dataset/train2014/COCO_train2014_000000064356.jpg
+Dataset/train2014/COCO_train2014_000000115654.jpg
+Dataset/train2014/COCO_train2014_000000505003.jpg
+Dataset/train2014/COCO_train2014_000000412704.jpg
+Dataset/train2014/COCO_train2014_000000405483.jpg
+Dataset/train2014/COCO_train2014_000000340375.jpg
+Dataset/train2014/COCO_train2014_000000077849.jpg
+Dataset/train2014/COCO_train2014_000000187882.jpg
+Dataset/train2014/COCO_train2014_000000209969.jpg
+Dataset/train2014/COCO_train2014_000000211439.jpg
+Dataset/train2014/COCO_train2014_000000217649.jpg
+Dataset/train2014/COCO_train2014_000000093994.jpg
+Dataset/train2014/COCO_train2014_000000365487.jpg
+Dataset/train2014/COCO_train2014_000000489343.jpg
+Dataset/train2014/COCO_train2014_000000489914.jpg
+Dataset/train2014/COCO_train2014_000000540476.jpg
+Dataset/train2014/COCO_train2014_000000097779.jpg
+Dataset/train2014/COCO_train2014_000000097785.jpg
+Dataset/train2014/COCO_train2014_000000491114.jpg
+Dataset/train2014/COCO_train2014_000000098679.jpg
+Dataset/train2014/COCO_train2014_000000405856.jpg
+Dataset/train2014/COCO_train2014_000000038561.jpg
+Dataset/train2014/COCO_train2014_000000102316.jpg
+Dataset/train2014/COCO_train2014_000000235529.jpg
+Dataset/train2014/COCO_train2014_000000498969.jpg
+Dataset/train2014/COCO_train2014_000000367998.jpg
+Dataset/train2014/COCO_train2014_000000127104.jpg
+Dataset/train2014/COCO_train2014_000000107918.jpg
+Dataset/train2014/COCO_train2014_000000242752.jpg
+Dataset/train2014/COCO_train2014_000000375096.jpg
+Dataset/train2014/COCO_train2014_000000114624.jpg
+Dataset/train2014/COCO_train2014_000000391200.jpg
+Dataset/train2014/COCO_train2014_000000558269.jpg
+Dataset/train2014/COCO_train2014_000000252996.jpg
+Dataset/train2014/COCO_train2014_000000516490.jpg
+Dataset/train2014/COCO_train2014_000000258450.jpg
+Dataset/train2014/COCO_train2014_000000108697.jpg
+Dataset/train2014/COCO_train2014_000000522527.jpg
+Dataset/train2014/COCO_train2014_000000391537.jpg
+Dataset/train2014/COCO_train2014_000000196701.jpg
+Dataset/train2014/COCO_train2014_000000020490.jpg
+Dataset/train2014/COCO_train2014_000000498371.jpg

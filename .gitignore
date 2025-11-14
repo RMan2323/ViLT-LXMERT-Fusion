@@ -8,3 +8,10 @@ hf_cache
 extracted_feats
 checkpoints
 Downloads
+checkpoints_lxmert/
+checkpoints_new_train/
+checkpoints_new_train_newer/
+checkpoints_vilt/
+extracted_feats_old/
+extracted_feats_val/
+extracted_feats_val_TEMP/

@@ -14,14 +14,29 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
+import datetime
+from torch.cuda.amp import autocast, GradScaler
+
+
+# === Logging setup ===
+LOG_FILE = "training_log_new_newer.txt"
+def log_msg(msg):
+    """Append a message to log file and print it."""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    line = f"[{timestamp}] {msg}\n"
+    print(line.strip())
+    with open(LOG_FILE, "a") as f:
+        f.write(line)
+
+
 # Fix seeds for reproducibility (Priyanshu Rao requested deterministic sample selection)
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = False # True swapeed with False
+torch.backends.cudnn.benchmark = True  # False is swapped with True
 
 # Local imports (files must keep same names)
 from vqa_dataset import VQADataset
@@ -34,20 +49,21 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # === Hyperparameters ===
-BATCH_SIZE = 8
-EPOCHS = 1
+BATCH_SIZE = 64
+EPOCHS = 50
 LR = 1e-4
-DATASET_CSV = "Dataset/dataset_train2014_filtered.csv" # Changing to Dataset/dataset_train2014_filtered.csv from original Dataset/dataset_train2014_with_cp.csv
+DATASET_CSV = "Dataset/dataset_train2014_with_cp.csv" # Changing to Dataset/dataset_train2014_filtered.csv from original Dataset/dataset_train2014_with_cp.csv
 IMAGE_ROOT = "Dataset/train2014/"
 FEATURE_DIR = "extracted_feats"   # where your .pt features are saved
 NUM_ANSWERS = 1000
-MAX_SAMPLES = 876   # keep small and reproducible for tests (Priyanshu wanted 100)
+MAX_SAMPLES = None   # keep small and reproducible for tests (Priyanshu wanted 100)
+VAL_MAX_SAMPLE = None
 
 # === Checkpoint paths ===
-os.makedirs("checkpoints", exist_ok=True)
-PRETRAINED_CKPT = "checkpoints/vilt_vqa.ckpt"
-LAST_EPOCH_CKPT = "checkpoints/last_epoch.ckpt"
-BEST_MODEL_CKPT = "checkpoints/best_model.ckpt"
+os.makedirs("checkpoints_new_train_newer", exist_ok=True)
+# PRETRAINED_CKPT = "checkpoints_new_train/vilt_vqa.ckpt"
+LAST_EPOCH_CKPT = "checkpoints_new_train_newer/last_epoch.ckpt"
+BEST_MODEL_CKPT = "checkpoints_new_train_newer/best_model.ckpt"
 
 # === Collate function (robust) ===
 def collate_fn(batch):
@@ -76,18 +92,27 @@ def collate_fn(batch):
 
     return collated
 
-# === Load data ===
-print("Loading Dataset...")
-train_dataset = VQADataset(DATASET_CSV, IMAGE_ROOT,
-                          max_samples=MAX_SAMPLES,
-                          feature_dir=FEATURE_DIR)
+# === Load data (Debugging step)===
+# import pandas as pd
+# df = pd.read_csv("Dataset/dataset_train2014.csv")
+# print("Answer index stats:", df["answer_idx"].min(), "→", df["answer_idx"].max())
 
-train_loader = DataLoader(train_dataset,
-                          batch_size=BATCH_SIZE,
-                          shuffle=True,
-                          collate_fn=collate_fn,
-                          num_workers=2,
-                          pin_memory=True)
+
+print("Loading Dataset...")
+train_dataset = VQADataset(DATASET_CSV, IMAGE_ROOT, max_samples=MAX_SAMPLES, feature_dir=FEATURE_DIR)
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True) # changed num_workers from 2 to os.cpu_cout() and prefetch_factor
+
+
+
+# === Validation Dataset ===
+VAL_CSV = "Dataset/dataset_Val2014_with_cp.csv"  # or same as train if not yet split
+VAL_IMAGE_ROOT = "Dataset/val2014/"  # same folder usually
+VAL_FEATURE_DIR = "extracted_feats_val"
+val_dataset = VQADataset(VAL_CSV, VAL_IMAGE_ROOT, max_samples=VAL_MAX_SAMPLE, feature_dir=VAL_FEATURE_DIR)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True) # prefetch_factor and num_workers
+
+print(f"Validation dataset size: {len(val_dataset)}")
+
 
 print(f"Dataset size (samples used): {len(train_dataset)}")
 if len(train_dataset) == 0:
@@ -105,22 +130,6 @@ optimizer = torch.optim.AdamW(trainable_params, lr=LR)
 # === Load pretrained backbone if available ===
 start_epoch = 0
 best_loss = float("inf")
-
-if os.path.exists(PRETRAINED_CKPT):
-    print(f"🔹 Loading pretrained weights from {PRETRAINED_CKPT}")
-    add_safe_globals([pl_ckpt.ModelCheckpoint])
-    try:
-        checkpoint = torch.load(PRETRAINED_CKPT, map_location=device, weights_only=False)
-        if "state_dict" in checkpoint:
-            state_dict = {k.replace("model.", ""): v for k, v in checkpoint["state_dict"].items()}
-        else:
-            state_dict = checkpoint.get("model_state_dict", checkpoint)
-        model.load_state_dict(state_dict, strict=False)
-        print("✅ Loaded pretrained backbone (ViLT + LXMERT)")
-    except Exception as e:
-        print(f"[Warning] Could not load pretrained backbone: {e}. Continuing with HF weights.")
-else:
-    print("⚠️ No pretrained checkpoint found. Training fusion from scratch")
 
 # === Optionally resume training (guard optimizer mismatch) ===
 if os.path.exists(LAST_EPOCH_CKPT):
@@ -140,99 +149,169 @@ if os.path.exists(LAST_EPOCH_CKPT):
     except Exception as e:
         print(f"[Resume warning] Failed to resume fully: {e}. Starting from scratch.")
 
+
+
+def evaluate(model, dataloader, criterion, device):
+    model.eval()
+    total_loss = 0.0
+    steps = 0
+
+    with torch.no_grad():
+        pbar = tqdm(dataloader, desc="Evaluating", ncols=100)
+        for batch in pbar:
+            if batch is None:
+                continue
+
+            vilt_inputs = {k: v.to(device) for k, v in batch["vilt"].items()}
+            lxmert_inputs = {k: v.to(device) for k, v in batch["lxmert"].items()}
+            labels = batch["answer_idx"].long().to(device)
+
+            visual_feats = batch.get("visual_feats")
+            visual_pos = batch.get("visual_pos")
+            if visual_feats is not None:
+                visual_feats = visual_feats.to(device).float()
+                visual_pos = visual_pos.to(device).float()
+
+            logits = model(vilt_inputs, lxmert_inputs,
+                        visual_feats=visual_feats,
+                        visual_pos=visual_pos)
+
+            loss = criterion(logits, labels)
+            total_loss += loss.item()
+            steps += 1
+
+            pbar.set_postfix({"val_loss": f"{(total_loss / steps):.4f}"})
+    if steps == 0:
+        return float("inf")
+
+    avg_loss = total_loss / steps
+    print(f"📊 Validation Loss: {avg_loss:.4f}")
+    log_msg(f"📊 Validation Loss: {avg_loss:.4f}")
+
+    return avg_loss
+
+
 # === Training Loop ===
 for epoch in range(start_epoch, EPOCHS):
     model.train()
     total_loss = 0.0
     steps = 0
-
+    scaler = GradScaler() # New added
     pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS}", ncols=120)
     for batch in pbar:
-        # Skip empty/invalid batches from collate
         if batch is None:
             continue
 
-        # Move inputs to device
         vilt_inputs = {k: v.to(device) for k, v in batch["vilt"].items()}
         lxmert_inputs = {k: v.to(device) for k, v in batch["lxmert"].items()}
         labels = batch["answer_idx"].long().to(device)
 
-        # Visual features (CPU->GPU). Ensure float32
-        visual_feats = batch.get("visual_feats", None)
-        visual_pos = batch.get("visual_pos", None)
+        visual_feats = batch.get("visual_feats")
+        visual_pos = batch.get("visual_pos")
         if visual_feats is not None:
-            visual_feats = visual_feats.to(device).float()   # [B, 36, 2048]
-            visual_pos = visual_pos.to(device).float()       # [B, 36, 4]
-
-        # Debug: print whether visual features are present (non-zero)
-        if visual_feats is not None:
-            # compute mean abs value to check if it's zero (fallback)
-            mean_abs = visual_feats.abs().mean().item()
-            uses_real_feats = mean_abs > 0.0
+            visual_feats = visual_feats.to(device).float()
+            visual_pos = visual_pos.to(device).float()
+            uses_real_feats = visual_feats.abs().mean().item() > 0.0
         else:
             uses_real_feats = False
 
         optimizer.zero_grad()
 
-        # Try to forward with visual_feats if model accepts them. Otherwise, fallback.
-        try:
-            if visual_feats is not None:
-                # many forward signatures expect (vilt_inputs, lxmert_inputs, visual_feats=..., visual_pos=...)
-                logits = model(vilt_inputs, lxmert_inputs, visual_feats=visual_feats, visual_pos=visual_pos)
-            else:
-                logits = model(vilt_inputs, lxmert_inputs)
-        except TypeError:
-            # model.forward likely doesn't accept visual_feats named args -> call without them
-            logits = model(vilt_inputs, lxmert_inputs)
-            uses_real_feats = False
-        except Exception as ex:
-            print(f"[Forward Error] {ex}. Skipping batch.")
-            continue
+        # try:
+        #     logits = model(vilt_inputs, lxmert_inputs,
+        #                 visual_feats=visual_feats,
+        #                 visual_pos=visual_pos)
+        # except Exception as ex:
+        #     print(f"[Forward Error] {ex}. Skipping batch.")
+        #     continue
 
-        loss = criterion(logits, labels)
-        loss.backward()
-        optimizer.step()
+        # loss = criterion(logits, labels)
+        # loss.backward()
+        # optimizer.step()
+
+        # Forward + loss computation under autocast (mixed precision)
+        with autocast():
+            try:
+                logits = model(vilt_inputs, lxmert_inputs,
+                            visual_feats=visual_feats,
+                            visual_pos=visual_pos)
+            except Exception as ex:
+                print(f"[Forward Error] {ex}. Skipping batch.")
+                continue
+            
+            loss = criterion(logits, labels)
+
+        # Backward pass — scaled for stability
+        scaler.scale(loss).backward()
+
+        # Step optimizer safely
+        scaler.step(optimizer)
+        scaler.update()
+
 
         total_loss += loss.item()
         steps += 1
 
         pbar.set_postfix({
-            "loss": f"{(total_loss/steps):.4f}",
+            "loss": f"{(total_loss / steps):.4f}",
             "uses_feats": "yes" if uses_real_feats else "no"
         })
+
 
     if steps == 0:
         print("[Warning] No valid training steps in epoch (all batches skipped).")
         continue
 
-    avg_loss = total_loss / steps
-    print(f"\n✅ Epoch {epoch+1}/{EPOCHS} | Loss: {avg_loss:.4f}")
+    avg_train_loss = total_loss / steps
+    print(f"\n✅ Epoch {epoch+1}/{EPOCHS} | Train Loss: {avg_train_loss:.4f}")
+    log_msg(f"\n✅ Epoch {epoch+1}/{EPOCHS} | Train Loss: {avg_train_loss:.4f}")
 
-    # === Save last checkpoint (safe save) ===
-    try:
+
+    # === Evaluate on validation set ===
+        # === Evaluate on validation set ===
+    do_validation = (epoch + 1) % 2 == 0
+
+    # --- Always save last epoch ---
+    if do_validation:
+        val_loss_to_save = evaluate(model, val_loader, criterion, device)
+        log_msg(f"📊 Validation Loss (Epoch {epoch+1}): {val_loss_to_save:.4f}")
+    else:
+        # Safely carry forward last known best loss
+        val_loss_to_save = best_loss
+        log_msg(f"⏭️ Skipping validation at epoch {epoch+1} for speed (keeping last val_loss={val_loss_to_save:.4f}).")
+
+    # === Save last checkpoint (for resuming) ===
+    torch.save({
+        "epoch": epoch,
+        "model_state_dict": model.state_dict(),
+        "optimizer_state_dict": optimizer.state_dict(),
+        "train_loss": avg_train_loss,
+        "val_loss": val_loss_to_save,
+        "best_loss": best_loss
+    }, LAST_EPOCH_CKPT)
+    log_msg(f"💾 Saved checkpoint: {LAST_EPOCH_CKPT}")
+
+    # === Update and save best model ===
+    if do_validation and val_loss_to_save < best_loss:
+        best_loss = val_loss_to_save
         torch.save({
             "epoch": epoch,
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
-            "loss": avg_loss,
+            "train_loss": avg_train_loss,
+            "val_loss": val_loss_to_save,
             "best_loss": best_loss
-        }, LAST_EPOCH_CKPT)
-        print(f"💾 Saved checkpoint: {LAST_EPOCH_CKPT}")
-    except Exception as e:
-        print(f"[Save Error] Could not save checkpoint: {e}")
+        }, BEST_MODEL_CKPT)
 
-    # === Save best model ===
-    if avg_loss < best_loss:
-        best_loss = avg_loss
-        try:
-            torch.save({
-                "epoch": epoch,
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "loss": avg_loss
-            }, BEST_MODEL_CKPT)
-            print(f"🏆 New Best Model Saved: {BEST_MODEL_CKPT}")
-        except Exception as e:
-            print(f"[Save Error] Could not save best model: {e}")
+        if os.path.exists(BEST_MODEL_CKPT):
+            log_msg(f"🏆 New Best Model Saved (val_loss={val_loss_to_save:.4f})")
+        else:
+            log_msg(f"[Warning] Tried to save best model, but file missing!")
+
 
 print("🎉 Training Complete!")
+log_msg("🎉 Training Complete!")
+
+for loader in [train_loader, val_loader]:
+    if hasattr(loader, '_iterator') and loader._iterator is not None:
+        loader._iterator._shutdown_workers()

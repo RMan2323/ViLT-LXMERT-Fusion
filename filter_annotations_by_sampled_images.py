@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 
-csv_path = "Dataset/dataset_train2014_with_cp.csv"  # ✅ Your merged CSV
-features_dir = "extracted_feats"         # ✅ Directory containing extracted features
+csv_path = "Dataset/dataset_Val2014_with_cp.csv"  # ✅ Your merged CSV
+features_dir = "extracted_feats_val_TEMP"         # ✅ Directory containing extracted features
 
 print("Loading dataset CSV...")
 df = pd.read_csv(csv_path, low_memory=False)
@@ -30,7 +30,7 @@ filtered_df = df[df.apply(has_feature, axis=1)].reset_index(drop=True)
 print(f"✅ Filtered rows: {len(filtered_df)}")
 
 # Save filtered CSV
-output_csv = "Dataset/dataset_train2014_filtered.csv"
+output_csv = "Dataset/dataset_val2014_filtered.csv"
 filtered_df.to_csv(output_csv, index=False)
 
 print(f"✅ Saved filtered CSV to {output_csv}")

@@ -1,26 +1,23 @@
 import pandas as pd
-# import random
+import random
 
-# random.seed(42)
+random.seed(42)
 
-csv_file = "Dataset/dataset_train2014_with_cp.csv"
+csv_file = "Dataset/dataset_Val2014_with_cp.csv"
 df = pd.read_csv(csv_file)
 
-# Only images that exist in training folder
-df = df[df["image_path"].str.contains("train2014")]
 
-print("Total training samples:", len(df))
+print("Total validation samples:", len(df))
 
 # Pick 100 unique images ONLY
 unique_imgs = df["image_path"].unique()
 print("Unique images:", len(unique_imgs))
 
 # selected_imgs = random.sample(list(unique_imgs), 100)
-
 selected_imgs = list(unique_imgs)
 
 # output = "images_list.txt"
-output = "images_list_full.txt"
+output = "images_list_full_val.txt"
 with open(output, "w") as f:
     for p in selected_imgs:
         # Full correct path
