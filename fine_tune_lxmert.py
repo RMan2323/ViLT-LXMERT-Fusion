@@ -1,9 +1,4 @@
 # fine_tune_lxmert.py
-"""
-Fast fine-tuning LXMERT classification head (Priyanshu Rao)
-with AMP, logging, validation toggle, checkpoint saving, and safe shutdown
-"""
-
 import os, torch, random, numpy as np, datetime
 from torch import nn
 from torch.utils.data import DataLoader
@@ -48,14 +43,23 @@ print(f"🟢 Using device: {device}")
 
 # === Collate ===
 def collate_fn(batch):
+    # Remove None entries (dataset may return None for unreadable rows)
     batch = [b for b in batch if b is not None]
-    if not batch: return None
+    if not batch:
+        return None
+
+    # LXMERT requires visual_feats; drop samples where visual_feats is None
+    batch_with_feats = [b for b in batch if b["visual_feats"] is not None and b["visual_pos"] is not None]
+    if len(batch_with_feats) == 0:
+        # nothing to train on in this batch
+        return None
+
     collated = {"lxmert": {}}
-    for k in batch[0]["lxmert"].keys():
-        collated["lxmert"][k] = torch.stack([b["lxmert"][k] for b in batch])
-    collated["visual_feats"] = torch.stack([b["visual_feats"] for b in batch])
-    collated["visual_pos"] = torch.stack([b["visual_pos"] for b in batch])
-    collated["answer_idx"] = torch.stack([b["answer_idx"] for b in batch])
+    for k in batch_with_feats[0]["lxmert"].keys():
+        collated["lxmert"][k] = torch.stack([b["lxmert"][k] for b in batch_with_feats])
+    collated["visual_feats"] = torch.stack([b["visual_feats"] for b in batch_with_feats])
+    collated["visual_pos"] = torch.stack([b["visual_pos"] for b in batch_with_feats])
+    collated["answer_idx"] = torch.stack([b["answer_idx"] for b in batch_with_feats])
     return collated
 
 # === Data ===
@@ -105,6 +109,8 @@ def evaluate():
         preds = torch.argmax(logits, dim=1)
         correct += (preds == labels).sum().item()
         total += labels.size(0)
+    if total == 0:
+        return float("inf"), 0.0
     return total_loss / total, 100 * correct / total
 
 # === Training ===
@@ -135,11 +141,14 @@ for epoch in range(EPOCHS):
         if total % (BATCH_SIZE * 100) == 0:
             pbar.set_postfix({"Loss": f"{total_loss/total:.4f}", "Acc": f"{100*correct/total:.2f}%"})
 
+    if total == 0:
+        print("[Warning] No training samples processed in this epoch (all batches skipped).")
+        continue
+
     avg_train_loss = total_loss / total
     train_acc = 100 * correct / total
     do_validation = ((epoch + 1) % VAL_EVERY == 0 or epoch == EPOCHS - 1)
 
-    # --- Validation / Skip logic ---
     if do_validation:
         val_loss, val_acc = evaluate()
         log_msg(f"Epoch {epoch+1}: Train {avg_train_loss:.4f}/{train_acc:.2f}% | Val {val_loss:.4f}/{val_acc:.2f}%")
@@ -159,7 +168,6 @@ for epoch in range(EPOCHS):
     }, LAST_EPOCH_CKPT)
     log_msg(f"💾 Saved checkpoint: {LAST_EPOCH_CKPT}")
 
-    # --- Update and save best model ---
     if do_validation and val_loss < best_loss:
         best_loss = val_loss
         torch.save({
@@ -173,7 +181,7 @@ for epoch in range(EPOCHS):
         }, BEST_MODEL_CKPT)
         log_msg(f"🏆 New Best Model Saved (val_loss={val_loss:.4f})")
 
-# === Graceful Worker Shutdown ===
+# Graceful Worker Shutdown
 for loader in [train_loader, val_loader]:
     if hasattr(loader, "_iterator") and loader._iterator is not None:
         loader._iterator._shutdown_workers()

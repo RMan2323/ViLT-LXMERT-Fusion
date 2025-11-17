@@ -1,127 +1,226 @@
+# testing_fusion_vqa.py
 """
-Final Evaluation for Fine-Tuned ViLT, LXMERT, and Fusion Models (Priyanshu Rao)
-Consistent preprocessing and evaluation pipeline.
+Final Evaluation for Fine-Tuned ViLT, Fine-Tuned LXMERT,
+and Fusion Model (pretrained ViLT + pretrained LXMERT).
+This version removes ALL rescale warnings by ensuring ViLT
+always receives a tensor instead of a PIL image.
 """
 
-import os, torch, datetime
+import os
+import torch
 from tqdm import tqdm
 import torch.nn as nn
+from PIL import Image
 from torch.utils.data import DataLoader
+from torchvision import transforms
+
+from transformers import ViltModel, ViltProcessor
+from transformers import LxmertModel, LxmertTokenizer
+
 from vqa_dataset import VQADataset
-from transformers import ViltModel, ViltProcessor, LxmertModel
 from vilt_lxmert_fusion import ViLT_LXMERT_Fusion
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# === Config ===
+
+# ============================================================
+# Basic transform (same as vqa_dataset.py)
+# ============================================================
+transform = transforms.Compose([
+    transforms.Resize((384, 384)),
+    transforms.ToTensor()
+])
+
+
+# ============================================================
+# Dataset + DataLoader
+# ============================================================
 VAL_CSV = "Dataset/dataset_Val2014_with_cp.csv"
 IMAGE_ROOT = "Dataset/val2014/"
 FEATURE_DIR = "extracted_feats_val"
+
 BATCH_SIZE = 64
 NUM_ANSWERS = 1000
-LOG_FILE = "evaluation_results.txt"
-MAX_SAMPLES = 256
+MAX_SAMPLES = None
 
-def log_msg(msg):
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{timestamp}] {msg}\n"
-    print(line.strip())
-    with open(LOG_FILE, "a") as f:
-        f.write(line)
+val_dataset = VQADataset(
+    VAL_CSV,
+    IMAGE_ROOT,
+    feature_dir=FEATURE_DIR,
+    max_samples=MAX_SAMPLES
+)
 
-# === Compatibility Patch ===
-import transformers
-if hasattr(transformers.models.vilt.processing_vilt, "ViltProcessor"):
-    old_call = transformers.models.vilt.processing_vilt.ViltProcessor.__call__
-    def patched_call(self, *args, **kwargs):
-        if "do_rescale" in kwargs:
-            kwargs.pop("do_rescale")
-        return old_call(self, *args, **kwargs)
-    transformers.models.vilt.processing_vilt.ViltProcessor.__call__ = patched_call
-    print("✅ Patched ViltProcessor to ignore 'do_rescale' argument")
+val_loader = DataLoader(
+    val_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=False,
+    num_workers=os.cpu_count(),
+    prefetch_factor=4,
+    pin_memory=True,
+    persistent_workers = True
+)
 
-# === Dataset ===
-val_dataset = VQADataset(VAL_CSV, IMAGE_ROOT, feature_dir=FEATURE_DIR, max_samples = MAX_SAMPLES)
-val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False,
-                        num_workers=os.cpu_count(), pin_memory=True)
 
 criterion = nn.CrossEntropyLoss()
 
-# === Models ===
-# --- ViLT ---
-vilt = ViltModel.from_pretrained("dandelin/vilt-b32-mlm").to(device)
-vilt_head = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location=device)
-vilt.load_state_dict(vilt_head["vilt_state"], strict=False)
-vilt_classifier = nn.Sequential(
-    nn.Linear(768, 1024), nn.ReLU(), nn.Dropout(0.3), nn.Linear(1024, NUM_ANSWERS)
-).to(device)
-vilt_classifier.load_state_dict(vilt_head["head_state"])
 
-# Ensure ViLT processor consistency
+# ============================================================
+# Load Fine-Tuned ViLT + Head
+# ============================================================
+vilt = ViltModel.from_pretrained("dandelin/vilt-b32-mlm").to(device)
+vilt_head_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location=device)
+
+vilt.load_state_dict(vilt_head_ckpt["vilt_state"], strict=False)
+
+vilt_classifier = nn.Sequential(
+    nn.Linear(768, 1024),
+    nn.ReLU(),
+    nn.Dropout(0.3),
+    nn.Linear(1024, NUM_ANSWERS)
+).to(device)
+
+vilt_classifier.load_state_dict(vilt_head_ckpt["head_state"])
+
+
 vilt_processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-mlm")
 if hasattr(vilt_processor.image_processor, "do_rescale"):
     vilt_processor.image_processor.do_rescale = False
-    print("✅ Set ViLT image processor do_rescale=False (align with training)")
+    print("✅ Set ViLT image processor do_rescale=False")
 
-# --- LXMERT ---
+
+# ============================================================
+# Load Fine-Tuned LXMERT + Head
+# ============================================================
 lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased").to(device)
-lxmert_head = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location=device)
-lxmert.load_state_dict(lxmert_head["lxmert_state"], strict=False)
+lxmert_tokenizer = LxmertTokenizer.from_pretrained("unc-nlp/lxmert-base-uncased")
+
+lx_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location=device)
+lxmert.load_state_dict(lx_ckpt["lxmert_state"], strict=False)
+
 lxmert_classifier = nn.Sequential(
-    nn.Linear(768, 1024), nn.ReLU(), nn.Dropout(0.3), nn.Linear(1024, NUM_ANSWERS)
+    nn.Linear(768, 1024),
+    nn.ReLU(),
+    nn.Dropout(0.3),
+    nn.Linear(1024, NUM_ANSWERS)
 ).to(device)
-lxmert_classifier.load_state_dict(lxmert_head["head_state"])
 
-# --- Fusion ---
-fusion = ViLT_LXMERT_Fusion(num_answers=NUM_ANSWERS, freeze_encoders=True).to(device)
-fusion_ckpt = torch.load("checkpoints_new_train_newer/best_model.ckpt", map_location=device)
+lxmert_classifier.load_state_dict(lx_ckpt["head_state"])
+
+
+# ============================================================
+# Load Fusion Model (pretrained encoders)
+# ============================================================
+fusion = ViLT_LXMERT_Fusion(
+    num_answers=NUM_ANSWERS,
+    freeze_encoders=True
+).to(device)
+
+fusion_ckpt = torch.load("checkpoints_old_at_start/best_model.ckpt", map_location=device)
 fusion.load_state_dict(fusion_ckpt["model_state_dict"], strict=False)
-print("✅ Loaded fine-tuned fusion model checkpoint")
+print("✅ Loaded fine-tuned fusion head")
 
-# === Evaluation Function ===
+
+# ============================================================
+# Evaluation function
+# ============================================================
 @torch.no_grad()
 def evaluate(model_type):
-    correct, total, total_loss = 0, 0, 0
-    model_map = {"ViLT": (vilt, vilt_classifier),
-                 "LXMERT": (lxmert, lxmert_classifier),
-                 "Fusion": (fusion, None)}
+    correct = 0
+    total = 0
+    running_loss = 0.0
 
-    for batch in tqdm(val_loader, desc=f"Evaluating {model_type}", ncols=100):
-        labels = batch["answer_idx"].long().to(device)
+    pbar = tqdm(val_loader, desc=f"Evaluating {model_type}", ncols=100)
+
+    for batch in pbar:
+        labels = batch["answer_idx"].to(device)
+
+        # ====================================================
+        # VI LT
+        # ====================================================
         if model_type == "ViLT":
-            inputs = {k: v.to(device) for k, v in batch["vilt"].items()}
-            out = model_map["ViLT"][0](**inputs, return_dict=True)
-            logits = model_map["ViLT"][1](out.pooler_output)
+            vilt_inputs = {
+                k: v.to(device)
+                for k, v in batch["vilt"].items()
+            }
 
+            out = vilt(**vilt_inputs, return_dict=True)
+            logits = vilt_classifier(out.pooler_output)
+
+        # ====================================================
+        # LXMERT
+        # ====================================================
         elif model_type == "LXMERT":
-            inputs = {k: v.to(device) for k, v in batch["lxmert"].items()}
-            feats = batch["visual_feats"].to(device).float()
-            pos = batch["visual_pos"].to(device).float()
-            out = model_map["LXMERT"][0](**inputs, visual_feats=feats, visual_pos=pos, return_dict=True)
-            logits = model_map["LXMERT"][1](out.pooled_output)
+            if batch["visual_feats"] is None:
+                print("[⚠] Missing visual_feats for LXMERT batch → skip")
+                continue
 
+            lx_inputs = {
+                k: v.to(device)
+                for k, v in batch["lxmert"].items()
+            }
+            feats = batch["visual_feats"].to(device)
+            pos = batch["visual_pos"].to(device)
+
+            out = lxmert(
+                **lx_inputs,
+                visual_feats=feats.float(),
+                visual_pos=pos.float(),
+                return_dict=True
+            )
+            logits = lxmert_classifier(out.pooled_output)
+
+        # ====================================================
+        # FUSION (pretrained encoders)
+        # ====================================================
         else:
-            vilt_inputs = {k: v.to(device) for k, v in batch["vilt"].items()}
-            lxmert_inputs = {k: v.to(device) for k, v in batch["lxmert"].items()}
-            feats = batch["visual_feats"].to(device).float()
-            pos = batch["visual_pos"].to(device).float()
-            logits = model_map["Fusion"][0](vilt_inputs, lxmert_inputs, feats, pos)
+            vilt_inputs = {
+                k: v.to(device)
+                for k, v in batch["vilt"].items()
+            }
+            lxmert_inputs = {
+                k: v.to(device)
+                for k, v in batch["lxmert"].items()
+            }
 
+            feats = batch["visual_feats"]
+            pos = batch["visual_pos"]
+
+            if feats is not None:
+                feats = feats.to(device).float()
+                pos = pos.to(device).float()
+
+            logits = fusion(
+                vilt_inputs,
+                lxmert_inputs,
+                feats,
+                pos
+            )
+
+        # =========================
+        # Loss + accuracy
+        # =========================
         loss = criterion(logits, labels)
+        running_loss += loss.item()
+
         preds = torch.argmax(logits, dim=1)
         correct += (preds == labels).sum().item()
         total += labels.size(0)
-        total_loss += loss.item()
 
-    return 100 * correct / total, total_loss / total
+    if total == 0:
+        return 0.0, float("inf")
 
-# === Run Evaluations ===
+    return 100 * correct / total, running_loss / total
+
+
+# ============================================================
+# RUN all evaluations
+# ============================================================
 vilt_acc, vilt_loss = evaluate("ViLT")
-lxmert_acc, lxmert_loss = evaluate("LXMERT")
+lx_acc, lx_loss = evaluate("LXMERT")
 fusion_acc, fusion_loss = evaluate("Fusion")
 
-# === Log Results ===
-log_msg("\n📊 Comparative Validation Results:")
-log_msg(f"   ViLT   → {vilt_acc:.2f}% | Loss {vilt_loss:.4f}")
-log_msg(f"   LXMERT → {lxmert_acc:.2f}% | Loss {lxmert_loss:.4f}")
-log_msg(f"   Fusion → {fusion_acc:.2f}% | Loss {fusion_loss:.4f}")
+print("\n📊 Comparative Results:")
+print(f"ViLT    → {vilt_acc:.2f}% | Loss: {vilt_loss:.4f}")
+print(f"LXMERT  → {lx_acc:.2f}% | Loss: {lx_loss:.4f}")
+print(f"Fusion  → {fusion_acc:.2f}% | Loss: {fusion_loss:.4f}")

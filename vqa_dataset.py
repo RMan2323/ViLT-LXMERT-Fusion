@@ -7,14 +7,12 @@ from transformers import ViltProcessor, LxmertTokenizer
 from torchvision import transforms
 import torch
 
-# max_question_length = 32
-
 class VQADataset(Dataset):
     """
     VQADataset that loads:
       - question and answer idx from CSV
       - image (for ViLT processing)
-      - pre-extracted Faster-RCNN features (.pt) located in `feature_dir` (default: extracted_feats/)
+      - pre-extracted Faster-RCNN features (.pt) located in `feature_dir`
         The .pt file must contain dict with keys: "features" (N x 2048), "boxes" (N x 4), "scores" (N)
     """
     def __init__(self, csv_path, image_root, max_samples=None, feature_dir="extracted_feats"):
@@ -26,6 +24,7 @@ class VQADataset(Dataset):
         self.feature_dir = feature_dir
 
         # Preload processors / tokenizers
+        # (we keep vilt_processor here but ALWAYS pass a pre-converted tensor to it elsewhere)
         self.vilt_processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-mlm")
         self.lxmert_tokenizer = LxmertTokenizer.from_pretrained("unc-nlp/lxmert-base-uncased")
 
@@ -34,9 +33,8 @@ class VQADataset(Dataset):
             transforms.Resize((384, 384)),
             transforms.ToTensor(),
         ])
-        # TODO get max_length after iterating through questions
-        self.max_question_length = max(len(q.split()) for q in self.data["question"])
-
+        # compute a simple max length for padding/truncation
+        self.max_question_length = max(len(str(q).split()) for q in self.data["question"])
 
 
     def __len__(self):
@@ -45,25 +43,20 @@ class VQADataset(Dataset):
     def _load_preextracted_feats(self, image_path):
         """
         Attempt to load pre-extracted features for given image_path.
-        Feature file is expected at: os.path.join(self.feature_dir, <basename_no_ext> + ".pt")
-        Returns (features, boxes) as torch.Tensor (N, feat_dim), (N,4)
-        If not found, returns zeros with shape (36,2048) and (36,4) respectively.
+        If not found -> return (None, None) and print a clear warning (user requested warnings instead of silent fallback).
+        If present -> return (feats_tensor, boxes_tensor) padded/truncated to 36 boxes.
         """
         base = os.path.splitext(os.path.basename(image_path))[0]
-        # The dataset may have names like 'COCO_train2014_000000123456.jpg' or simply '000000123456.jpg'.
-        # We'll try a few naming conventions to find the features, but priority is basename.pt
         candidates = [
             f"{base}.pt",
             os.path.join(self.feature_dir, f"{base}.pt"),
             os.path.join(self.feature_dir, base + ".pt")
         ]
-        # If base has prefixes, also try last numeric token
         tokens = base.split("_")
         if tokens and tokens[-1].isdigit():
             alt = tokens[-1] + ".pt"
             candidates.append(os.path.join(self.feature_dir, alt))
 
-        # Check existence
         feat_path = None
         for c in candidates:
             p = c if os.path.isabs(c) else os.path.join(self.feature_dir, os.path.basename(c))
@@ -72,12 +65,9 @@ class VQADataset(Dataset):
                 break
 
         if feat_path is None:
-            # Not found -> fallback
-            # Return zeros (36 boxes, 2048 dim) as default expected by LXMERT
-            print(f"[Warning] Feature file not found for image {image_path}. Expected under {self.feature_dir}. Using zero-features fallback.")
-            feat_dim = 2048
-            num_boxes = 36
-            return torch.zeros((num_boxes, feat_dim), dtype=torch.float32), torch.zeros((num_boxes, 4), dtype=torch.float32)
+            # User asked: give warnings instead of silent zero fallback.
+            print(f"[MISSING FEATS WARNING] Feature file not found for image {image_path}. Expected under {self.feature_dir}. Returning (None, None).")
+            return None, None
 
         # Load and validate
         data = torch.load(feat_path)
@@ -96,7 +86,6 @@ class VQADataset(Dataset):
             feats = feats[:num_boxes]
             boxes = boxes[:num_boxes]
         else:
-            # pad
             pad_n = num_boxes - feats.shape[0]
             feat_dim = feats.shape[1]
             feats = torch.cat([feats, torch.zeros((pad_n, feat_dim), dtype=torch.float32)], dim=0)
@@ -110,18 +99,18 @@ class VQADataset(Dataset):
         question = str(row["question"])
         answer_idx = int(row["answer_idx"]) if row["answer_idx"] >= 0 else 0
 
-        # Load image as PIL
+        # Load image as PIL (fallback to black image if load fails)
         try:
             image = Image.open(image_path).convert("RGB")
         except Exception as e:
-            print(f"[Warning] Could not load image: {image_path}. Using blank image instead.")
+            print(f"[Warning] Could not load image: {image_path}. Using blank image instead. ({e})")
             image = Image.new("RGB", (384, 384), (0, 0, 0))
 
-        # ViLT: use processor (we will pass PIL image through a light transform to ensure size)
-        image_t = self.transform(image)  # 3x384x384 tensor
-        # vilt_processor can accept PIL image or tensor; we pass tensor here so processor will treat accordingly
+        # IMPORTANT: convert to tensor BEFORE passing to processor to avoid HF rescale warnings.
+        image_t = self.transform(image)  # 3x384x384 tensor (values in [0,1])
+
         vilt_inputs = self.vilt_processor(
-            images=image_t,
+            images=image_t,           # pass tensor to prevent processor rescale check/warning
             text=question,
             do_rescale=False,
             return_tensors="pt",
@@ -130,7 +119,6 @@ class VQADataset(Dataset):
             max_length=self.max_question_length
         )
 
-        # LXMERT text encoding
         lxmert_inputs = self.lxmert_tokenizer(
             question,
             padding="max_length",
@@ -139,13 +127,13 @@ class VQADataset(Dataset):
             return_tensors="pt"
         )
 
-        # Load pre-extracted features (or fallback zeros)
-        visual_feats, visual_pos = self._load_preextracted_feats(image_path)  # tensors [36,2048], [36,4]
+        # Load pre-extracted features (or None if missing)
+        visual_feats, visual_pos = self._load_preextracted_feats(image_path)  # either tensors or (None, None)
 
         return {
             "vilt": {k: v.squeeze(0) for k, v in vilt_inputs.items()},
             "lxmert": {k: v.squeeze(0) for k, v in lxmert_inputs.items()},
-            "visual_feats": visual_feats,   # [36, 2048] (cpu tensor)
-            "visual_pos": visual_pos,       # [36, 4] (cpu tensor)
+            "visual_feats": visual_feats,   # either [36,2048] tensor or None
+            "visual_pos": visual_pos,       # either [36,4] tensor or None
             "answer_idx": torch.tensor(answer_idx, dtype=torch.long)
         }

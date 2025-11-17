@@ -15,3 +15,7 @@ checkpoints_vilt/
 extracted_feats_old/
 extracted_feats_val/
 extracted_feats_val_TEMP/
+checkpoints_inc_layers/
+checkpoints_old_at_start/
+checkpoints_train_on_fine_tuned_deeper/
+
