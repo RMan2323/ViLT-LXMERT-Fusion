@@ -3,7 +3,7 @@ import random
 
 random.seed(42)
 
-csv_file = "Dataset/dataset_Val2014_with_cp.csv"
+csv_file = "Dataset/dataset_test2015.csv"
 df = pd.read_csv(csv_file)
 
 
@@ -17,7 +17,7 @@ print("Unique images:", len(unique_imgs))
 selected_imgs = list(unique_imgs)
 
 # output = "images_list.txt"
-output = "images_list_full_val.txt"
+output = "images_list_full_test.txt"
 with open(output, "w") as f:
     for p in selected_imgs:
         # Full correct path

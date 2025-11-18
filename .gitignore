@@ -18,4 +18,4 @@ extracted_feats_val_TEMP/
 checkpoints_inc_layers/
 checkpoints_old_at_start/
 checkpoints_train_on_fine_tuned_deeper/
-
+extracted_feats_test/

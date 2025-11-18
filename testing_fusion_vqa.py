@@ -19,9 +19,17 @@ from transformers import LxmertModel, LxmertTokenizer
 
 from vqa_dataset import VQADataset
 from vilt_lxmert_fusion import ViLT_LXMERT_Fusion
+import datetime
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+def log_msg(msg):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    line = f"[{timestamp}] {msg}\n"
+    print(line.strip())
+    with open("testing_test.txt", "a") as f:
+        f.write(line)
 
 
 # ============================================================
@@ -36,9 +44,9 @@ transform = transforms.Compose([
 # ============================================================
 # Dataset + DataLoader
 # ============================================================
-VAL_CSV = "Dataset/dataset_Val2014_with_cp.csv"
-IMAGE_ROOT = "Dataset/val2014/"
-FEATURE_DIR = "extracted_feats_val"
+VAL_CSV = "Dataset/dataset_test2015.csv"
+IMAGE_ROOT = "Dataset/test2015/"
+FEATURE_DIR = "extracted_feats_test"
 
 BATCH_SIZE = 64
 NUM_ANSWERS = 1000
@@ -224,3 +232,7 @@ print("\n📊 Comparative Results:")
 print(f"ViLT    → {vilt_acc:.2f}% | Loss: {vilt_loss:.4f}")
 print(f"LXMERT  → {lx_acc:.2f}% | Loss: {lx_loss:.4f}")
 print(f"Fusion  → {fusion_acc:.2f}% | Loss: {fusion_loss:.4f}")
+log_msg("\n📊 Comparative Results:")
+log_msg(f"ViLT    → {vilt_acc:.2f}% | Loss: {vilt_loss:.4f}")
+log_msg(f"LXMERT  → {lx_acc:.2f}% | Loss: {lx_loss:.4f}")
+log_msg(f"Fusion  → {fusion_acc:.2f}% | Loss: {fusion_loss:.4f}")
