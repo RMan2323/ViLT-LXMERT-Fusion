@@ -120,12 +120,7 @@ lxmert_classifier.load_state_dict(lx_ckpt["head_state"])
 # ============================================================
 vilt_pre = ViltModel.from_pretrained("dandelin/vilt-b32-mlm").to(device)
 
-vilt_pre_classifier = nn.Sequential(
-    nn.Linear(768, 1024),
-    nn.ReLU(),
-    nn.Dropout(0.3),
-    nn.Linear(1024, NUM_ANSWERS)
-).to(device)
+vilt_pre_classifier = nn.Linear(768, NUM_ANSWERS).to(device)
 # No weights loaded → stays random (pure pretrained backbone)
 print("✅ Loaded pretrained ViLT (no fine-tuning)")
 
@@ -134,12 +129,7 @@ print("✅ Loaded pretrained ViLT (no fine-tuning)")
 # ============================================================
 lxmert_pre = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased").to(device)
 
-lxmert_pre_classifier = nn.Sequential(
-    nn.Linear(768, 1024),
-    nn.ReLU(),
-    nn.Dropout(0.3),
-    nn.Linear(1024, NUM_ANSWERS)
-).to(device)
+lxmert_pre_classifier = nn.Linear(768, NUM_ANSWERS).to(device)
 print("✅ Loaded pretrained LXMERT (no fine-tuning)")
 
 
@@ -153,7 +143,7 @@ fusion = ViLT_LXMERT_Fusion(
     freeze_encoders=True
 ).to(device)
 
-fusion_ckpt = torch.load("checkpoints_old_at_start/best_model.ckpt", map_location=device)
+fusion_ckpt = torch.load("checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
 fusion.load_state_dict(fusion_ckpt["model_state_dict"], strict=False)
 print("✅ Loaded fine-tuned fusion head")
 
@@ -312,9 +302,9 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
     )
 
     model_list = [
-        "ViLT",
-        "LXMERT",
-        "Fusion",
+        # "ViLT",
+        # "LXMERT",
+        # "Fusion",
         "ViLT_pretrained",
         "LXMERT_pretrained"
     ]

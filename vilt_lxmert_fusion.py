@@ -18,7 +18,7 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased")
 
         # === REMOVE loading Priyanshu’s fine-tuned weights (you asked to disable this) ===
-        """
+        
         try:
             vilt_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
             lxmert_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
@@ -28,7 +28,7 @@ class ViLT_LXMERT_Fusion(nn.Module):
         except Exception as e:
             print(f"⚠️ Could not load fine-tuned encoder weights: {e}")
             print("→ Falling back to pretrained encoders.")
-        """
+        
 
         print("🔵 Using PURE pretrained ViLT & pretrained LXMERT for fusion.")
 
@@ -43,15 +43,17 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.vilt_to_lxmert_proj = nn.Linear(hidden_dim, self.project_to_dim)
 
         # === SMALL FUSION MLP (your requested network) ===
+        """
         self.fusion = nn.Sequential(
             nn.Linear(2 * hidden_dim, fusion_dim),
             nn.ReLU(),
             nn.Dropout(0.3),
             nn.Linear(fusion_dim, num_answers)
         )
+        """
 
         # === BIG MLP (commented out, as you asked) ===
-        """
+        
         self.fusion = nn.Sequential(
             nn.Linear(2 * hidden_dim, 2048),
             nn.ReLU(),
@@ -61,7 +63,7 @@ class ViLT_LXMERT_Fusion(nn.Module):
             nn.Dropout(0.2),
             nn.Linear(1024, num_answers)
         )
-        """
+        
 
     def _make_grid_boxes(self, batch_size, device):
         n = self.num_regions
