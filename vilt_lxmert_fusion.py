@@ -17,15 +17,15 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased")
 
         # TODO: if finetuning:
-        try:
-            vilt_ckpt = torch.load("checkpoints_old/checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
-            lxmert_ckpt = torch.load("checkpoints_old/checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
-            self.vilt.load_state_dict(vilt_ckpt["vilt_state"], strict=False)
-            self.lxmert.load_state_dict(lxmert_ckpt["lxmert_state"], strict=False)
-            print("✅ Loaded fine-tuned ViLT & LXMERT encoder weights.")
-        except Exception as e:
-            print(f"⚠️ Could not load fine-tuned encoder weights: {e}")
-            print("→ Falling back to pretrained encoders.")
+        # try:
+        #     vilt_ckpt = torch.load("checkpoints_old/checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
+        #     lxmert_ckpt = torch.load("checkpoints_old/checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
+        #     self.vilt.load_state_dict(vilt_ckpt["vilt_state"], strict=False)
+        #     self.lxmert.load_state_dict(lxmert_ckpt["lxmert_state"], strict=False)
+        #     print("✅ Loaded fine-tuned ViLT & LXMERT encoder weights.")
+        # except Exception as e:
+        #     print(f"⚠️ Could not load fine-tuned encoder weights: {e}")
+        #     print("→ Falling back to pretrained encoders.")
         
 
         # print("🔵 Using PURE pretrained ViLT & pretrained LXMERT for fusion.")

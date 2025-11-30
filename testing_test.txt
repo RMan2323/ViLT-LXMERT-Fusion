@@ -57,6 +57,10 @@
 
 
 
+-----PERFECT TILL NOW--------
+
+
+
 
 -----INCREASE LAYERS------- (PRETRAINED) ----> training_log_new.txt (GRAPH)
 
@@ -73,6 +77,43 @@
 ---------------------- FINE-TUNED VALUES WITH LARGE NEURAL NETWORK (FREEZED)-----------------> training_log_new_newer.txt----------FREEZED WEIGHTS---------(DEEP NEURAL WITH FINE-TUNED)
 
 
+----(BELOW 1 step below is checkpoints_new_train_newer) w.r.t increase layers-----  !!!! NOT FOUND !!!
+
 
 [2025-12-01 01:46:37] 
 ========== Evaluating on VAL2014 ==========
+[2025-12-01 02:08:19] Fusion: 53.33% | Loss: 0.0226
+[2025-12-01 02:08:19] VAL RESULTS: {'Fusion': (53.33209622904102, 0.022634605635183453)}
+
+
+
+
+---------SAME AS ABOVE, NO BENEFIT OF RE-RUNNING-------
+
+
+
+
+
+
+-------------------- checkpoints_train_on_fine_tuned_deeper ----------- (EQUALS TO LINE 52-55)
+[2025-12-01 02:31:47] 
+========== Evaluating on VAL2014 ==========
+[2025-12-01 02:53:31] Fusion: 53.37% | Loss: 0.0226
+[2025-12-01 02:53:31] VAL RESULTS: {'Fusion': (53.366028232487245, 0.022629883178731415)}
+
+
+
+
+
+------------- checkpoints_inc_layers ----------- (DIDN'T GET WHAT IT MEANS)
+[2025-12-01 02:55:43] 
+========== Evaluating on VAL2014 ==========
+[2025-12-01 03:17:42] Fusion: 53.34% | Loss: 0.0226
+[2025-12-01 03:17:43] VAL RESULTS: {'Fusion': (53.338723573464115, 0.022629113166357052)}
+
+
+
+
+
+--------------RE-TRAINING AND RE-EVALUATING INCREASE LAYERS-----------------
+

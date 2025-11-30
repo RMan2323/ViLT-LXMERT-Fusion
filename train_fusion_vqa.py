@@ -40,7 +40,7 @@ parser.add_argument("--freeze_encoders", type=bool, default=True)
 parser.add_argument("--checkpoint_dir", type=str, default="checkpoints_weight_unfreeze")
 parser.add_argument("--log_file", type=str, default="training_log_new_newer.txt")
 
-parser.add_argument("--mode", type=str, default="fuse", choices=["vilt", "lxmert", "fuse"])
+# parser.add_argument("--mode", type=str, default="fuse", choices=["vilt", "lxmert", "fuse"])
 
 parser.add_argument("--num_workers", type=int, default=0, help="0 means use all CPU cores (os.cpu_count()).")
 parser.add_argument("--prefetch_factor", type=int, default=2)

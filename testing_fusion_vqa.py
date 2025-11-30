@@ -144,7 +144,9 @@ fusion = ViLT_LXMERT_Fusion(
 ).to(device)
 
 # fusion_ckpt = torch.load("checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
+# fusion_ckpt = torch.load("checkpoints_old/checkpoints_new_train_newer/best_model.ckpt", map_location=device) 
 fusion_ckpt = torch.load("checkpoints_old/checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) 
+
 # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
 # TODO: THE BEST checkpoints_old/checkpoints_inc_layers/best_model.ckpt -> checkpoints_weights_unfreeze/best_model.ckpt
 fusion.load_state_dict(fusion_ckpt["model_state_dict"], strict=False)
