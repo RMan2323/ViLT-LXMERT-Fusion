@@ -1,170 +1,95 @@
-[2025-11-11 20:36:08] 
-✅ Epoch 1/10 | Train Loss: 6.9251
-[2025-11-11 20:36:08] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
-[2025-11-11 20:38:35] 
-✅ Epoch 1/10 | Train Loss: 6.9251
-[2025-11-11 20:38:35] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
-[2025-11-11 20:38:36] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:38:38] 
-✅ Epoch 2/10 | Train Loss: 6.8039
-[2025-11-11 20:38:41] 📊 Validation Loss: 6.7704
-[2025-11-11 20:38:41] 📊 Validation Loss (Epoch 2): 6.7704
-[2025-11-11 20:38:45] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:38:46] 🏆 New Best Model Saved (val_loss=6.7704)
-[2025-11-11 20:38:48] 
-✅ Epoch 3/10 | Train Loss: 6.6777
-[2025-11-11 20:38:48] ⏭️ Skipping validation at epoch 3 for speed (keeping last val_loss=6.7704).
-[2025-11-11 20:38:52] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:38:53] 
-✅ Epoch 4/10 | Train Loss: 6.5440
-[2025-11-11 20:38:55] 📊 Validation Loss: 6.6212
-[2025-11-11 20:38:55] 📊 Validation Loss (Epoch 4): 6.6212
-[2025-11-11 20:38:59] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:03] 🏆 New Best Model Saved (val_loss=6.6212)
-[2025-11-11 20:39:04] 
-✅ Epoch 5/10 | Train Loss: 6.4033
-[2025-11-11 20:39:04] ⏭️ Skipping validation at epoch 5 for speed (keeping last val_loss=6.6212).
-[2025-11-11 20:39:08] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:09] 
-✅ Epoch 6/10 | Train Loss: 6.2619
-[2025-11-11 20:39:11] 📊 Validation Loss: 6.4326
-[2025-11-11 20:39:11] 📊 Validation Loss (Epoch 6): 6.4326
-[2025-11-11 20:39:15] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:19] 🏆 New Best Model Saved (val_loss=6.4326)
-[2025-11-11 20:39:20] 
-✅ Epoch 7/10 | Train Loss: 6.0582
-[2025-11-11 20:39:20] ⏭️ Skipping validation at epoch 7 for speed (keeping last val_loss=6.4326).
-[2025-11-11 20:39:25] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:27] 
-✅ Epoch 8/10 | Train Loss: 5.8625
-[2025-11-11 20:39:29] 📊 Validation Loss: 6.1832
-[2025-11-11 20:39:29] 📊 Validation Loss (Epoch 8): 6.1832
-[2025-11-11 20:39:33] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:37] 🏆 New Best Model Saved (val_loss=6.1832)
-[2025-11-11 20:39:39] 
-✅ Epoch 9/10 | Train Loss: 5.6310
-[2025-11-11 20:39:39] ⏭️ Skipping validation at epoch 9 for speed (keeping last val_loss=6.1832).
-[2025-11-11 20:39:43] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:45] 
-✅ Epoch 10/10 | Train Loss: 5.3698
-[2025-11-11 20:39:47] 📊 Validation Loss: 5.8722
-[2025-11-11 20:39:47] 📊 Validation Loss (Epoch 10): 5.8722
-[2025-11-11 20:39:52] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 20:39:56] 🏆 New Best Model Saved (val_loss=5.8722)
-[2025-11-11 20:39:56] 🎉 Training Complete!
-[2025-11-11 21:06:19] 
-✅ Epoch 1/50 | Train Loss: 1.8926
-[2025-11-11 21:06:19] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
-[2025-11-11 21:06:21] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 21:30:48] 
-✅ Epoch 2/50 | Train Loss: 1.5181
-[2025-11-11 21:52:44] 📊 Validation Loss: 1.4717
-[2025-11-11 21:52:44] 📊 Validation Loss (Epoch 2): 1.4717
-[2025-11-11 21:52:48] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 21:52:49] 🏆 New Best Model Saved (val_loss=1.4717)
-[2025-11-11 22:16:59] 
-✅ Epoch 3/50 | Train Loss: 1.4067
-[2025-11-11 22:16:59] ⏭️ Skipping validation at epoch 3 for speed (keeping last val_loss=1.4717).
-[2025-11-11 22:17:03] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 22:41:37] 
-✅ Epoch 4/50 | Train Loss: 1.3390
-[2025-11-11 23:03:32] 📊 Validation Loss: 1.3874
-[2025-11-11 23:03:32] 📊 Validation Loss (Epoch 4): 1.3874
-[2025-11-11 23:03:35] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 23:03:39] 🏆 New Best Model Saved (val_loss=1.3874)
-[2025-11-11 23:28:16] 
-✅ Epoch 5/50 | Train Loss: 1.2901
-[2025-11-11 23:28:16] ⏭️ Skipping validation at epoch 5 for speed (keeping last val_loss=1.3874).
-[2025-11-11 23:28:19] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-11 23:52:42] 
-✅ Epoch 6/50 | Train Loss: 1.2500
-[2025-11-12 00:14:39] 📊 Validation Loss: 1.3458
-[2025-11-12 00:14:39] 📊 Validation Loss (Epoch 6): 1.3458
-[2025-11-12 00:14:42] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 00:14:46] 🏆 New Best Model Saved (val_loss=1.3458)
-[2025-11-12 00:39:04] 
-✅ Epoch 7/50 | Train Loss: 1.2180
-[2025-11-12 00:39:04] ⏭️ Skipping validation at epoch 7 for speed (keeping last val_loss=1.3458).
-[2025-11-12 00:39:07] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 01:03:44] 
-✅ Epoch 8/50 | Train Loss: 1.1882
-[2025-11-12 01:25:41] 📊 Validation Loss: 1.3309
-[2025-11-12 01:25:41] 📊 Validation Loss (Epoch 8): 1.3309
-[2025-11-12 01:25:45] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 01:25:48] 🏆 New Best Model Saved (val_loss=1.3309)
-[2025-11-12 01:50:10] 
-✅ Epoch 9/50 | Train Loss: 1.1617
-[2025-11-12 01:50:10] ⏭️ Skipping validation at epoch 9 for speed (keeping last val_loss=1.3309).
-[2025-11-12 01:50:14] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 02:14:30] 
-✅ Epoch 10/50 | Train Loss: 1.1381
-[2025-11-12 02:36:27] 📊 Validation Loss: 1.3389
-[2025-11-12 02:36:27] 📊 Validation Loss (Epoch 10): 1.3389
-[2025-11-12 02:36:30] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 03:01:05] 
-✅ Epoch 11/50 | Train Loss: 1.1149
-[2025-11-12 03:01:05] ⏭️ Skipping validation at epoch 11 for speed (keeping last val_loss=1.3309).
-[2025-11-12 03:01:09] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 03:25:00] 
-✅ Epoch 12/50 | Train Loss: 1.0952
-[2025-11-12 03:46:58] 📊 Validation Loss: 1.3319
-[2025-11-12 03:46:58] 📊 Validation Loss (Epoch 12): 1.3319
-[2025-11-12 03:47:02] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 04:11:40] 
-✅ Epoch 13/50 | Train Loss: 1.0765
-[2025-11-12 04:11:40] ⏭️ Skipping validation at epoch 13 for speed (keeping last val_loss=1.3309).
-[2025-11-12 04:11:44] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 04:36:19] 
-✅ Epoch 14/50 | Train Loss: 1.0569
-[2025-11-12 04:58:15] 📊 Validation Loss: 1.3373
-[2025-11-12 04:58:15] 📊 Validation Loss (Epoch 14): 1.3373
-[2025-11-12 04:58:19] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 05:22:50] 
-✅ Epoch 15/50 | Train Loss: 1.0407
-[2025-11-12 05:22:50] ⏭️ Skipping validation at epoch 15 for speed (keeping last val_loss=1.3309).
-[2025-11-12 05:22:53] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 05:47:04] 
-✅ Epoch 16/50 | Train Loss: 1.0247
-[2025-11-12 06:09:02] 📊 Validation Loss: 1.3486
-[2025-11-12 06:09:02] 📊 Validation Loss (Epoch 16): 1.3486
-[2025-11-12 06:09:05] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 06:33:31] 
-✅ Epoch 17/50 | Train Loss: 1.0093
-[2025-11-12 06:33:31] ⏭️ Skipping validation at epoch 17 for speed (keeping last val_loss=1.3309).
-[2025-11-12 06:33:35] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 06:57:55] 
-✅ Epoch 18/50 | Train Loss: 0.9944
-[2025-11-12 07:19:53] 📊 Validation Loss: 1.3589
-[2025-11-12 07:19:53] 📊 Validation Loss (Epoch 18): 1.3589
-[2025-11-12 07:19:57] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 07:44:30] 
-✅ Epoch 19/50 | Train Loss: 0.9802
-[2025-11-12 07:44:30] ⏭️ Skipping validation at epoch 19 for speed (keeping last val_loss=1.3309).
-[2025-11-12 07:44:34] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 08:09:03] 
-✅ Epoch 20/50 | Train Loss: 0.9676
-[2025-11-12 08:30:59] 📊 Validation Loss: 1.3676
-[2025-11-12 08:30:59] 📊 Validation Loss (Epoch 20): 1.3676
-[2025-11-12 08:31:02] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 08:55:17] 
-✅ Epoch 21/50 | Train Loss: 0.9542
-[2025-11-12 08:55:17] ⏭️ Skipping validation at epoch 21 for speed (keeping last val_loss=1.3309).
-[2025-11-12 08:55:21] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 09:19:47] 
-✅ Epoch 22/50 | Train Loss: 0.9427
-[2025-11-12 09:41:44] 📊 Validation Loss: 1.3800
-[2025-11-12 09:41:44] 📊 Validation Loss (Epoch 22): 1.3800
-[2025-11-12 09:41:48] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 10:06:08] 
-✅ Epoch 23/50 | Train Loss: 0.9308
-[2025-11-12 10:06:08] ⏭️ Skipping validation at epoch 23 for speed (keeping last val_loss=1.3309).
-[2025-11-12 10:06:12] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 10:30:41] 
-✅ Epoch 24/50 | Train Loss: 0.9206
-[2025-11-12 10:52:39] 📊 Validation Loss: 1.3958
-[2025-11-12 10:52:39] 📊 Validation Loss (Epoch 24): 1.3958
-[2025-11-12 10:52:43] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
-[2025-11-12 11:17:08] 
-✅ Epoch 25/50 | Train Loss: 0.9096
-[2025-11-12 11:17:08] ⏭️ Skipping validation at epoch 25 for speed (keeping last val_loss=1.3309).
-[2025-11-12 11:17:11] 💾 Saved checkpoint: checkpoints_new_train_newer/last_epoch.ckpt
+[2025-11-30 02:41:54] 
+✅ Epoch 1/1 | Train Loss: 6.9180
+[2025-11-30 02:41:54] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
+[2025-11-30 02:41:56] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 02:41:56] 🎉 Training Complete!
+[2025-11-30 02:45:37] 🎉 Training Complete!
+[2025-11-30 02:46:03] 
+✅ Epoch 2/2 | Train Loss: 6.6824
+[2025-11-30 02:46:05] 📊 Validation Loss: 6.8569
+[2025-11-30 02:46:05] 📊 Validation Loss (Epoch 2): 6.8569
+[2025-11-30 02:46:07] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 02:46:08] 🏆 New Best Model Saved (val_loss=6.8569)
+[2025-11-30 02:46:08] 🎉 Training Complete!
+[2025-11-30 03:31:19] 
+
+
+
+
+✅ Epoch 1/2 | Train Loss: 1.9096
+[2025-11-30 03:31:19] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
+[2025-11-30 03:31:20] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 03:48:38] 
+✅ Epoch 2/2 | Train Loss: 1.5532
+[2025-11-30 04:10:28] 📊 Validation Loss: 1.5166
+[2025-11-30 04:10:28] 📊 Validation Loss (Epoch 2): 1.5166
+[2025-11-30 04:10:30] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 04:10:32] 🏆 New Best Model Saved (val_loss=1.5166)
+[2025-11-30 04:10:32] 🎉 Training Complete!
+
+
+
+
+WEIGHTS UNFREEZED
+
+
+[2025-11-30 04:34:29] 
+✅ Epoch 7/50 | Train Loss: 0.2556
+[2025-11-30 04:34:29] ⏭️ Skipping validation at epoch 7 for speed (keeping last val_loss=1.4113).
+[2025-11-30 04:34:31] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 04:52:03] 
+✅ Epoch 8/50 | Train Loss: 0.2274
+[2025-11-30 05:13:51] 📊 Validation Loss: 2.5900
+[2025-11-30 05:13:51] 📊 Validation Loss (Epoch 8): 2.5900
+[2025-11-30 05:13:53] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 05:31:21] 
+✅ Epoch 9/50 | Train Loss: 0.2115
+[2025-11-30 05:31:21] ⏭️ Skipping validation at epoch 9 for speed (keeping last val_loss=1.4113).
+[2025-11-30 05:31:23] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 05:48:54] 
+✅ Epoch 10/50 | Train Loss: 0.1987
+[2025-11-30 06:10:42] 📊 Validation Loss: 2.9331
+[2025-11-30 06:10:42] 📊 Validation Loss (Epoch 10): 2.9331
+[2025-11-30 06:10:44] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 06:28:13] 
+✅ Epoch 11/50 | Train Loss: 0.1873
+[2025-11-30 06:28:13] ⏭️ Skipping validation at epoch 11 for speed (keeping last val_loss=1.4113).
+[2025-11-30 06:28:15] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 06:45:48] 
+✅ Epoch 12/50 | Train Loss: 0.1744
+[2025-11-30 07:07:37] 📊 Validation Loss: 3.6346
+[2025-11-30 07:07:37] 📊 Validation Loss (Epoch 12): 3.6346
+[2025-11-30 07:07:39] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 07:25:16] 
+✅ Epoch 13/50 | Train Loss: 0.1801
+[2025-11-30 07:25:16] ⏭️ Skipping validation at epoch 13 for speed (keeping last val_loss=1.4113).
+[2025-11-30 07:25:18] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 07:42:53] 
+✅ Epoch 14/50 | Train Loss: 0.1716
+[2025-11-30 08:04:42] 📊 Validation Loss: 3.1888
+[2025-11-30 08:04:42] 📊 Validation Loss (Epoch 14): 3.1888
+[2025-11-30 08:04:44] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 08:22:13] 
+✅ Epoch 15/50 | Train Loss: 0.1642
+[2025-11-30 08:22:13] ⏭️ Skipping validation at epoch 15 for speed (keeping last val_loss=1.4113).
+[2025-11-30 08:22:15] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 08:39:49] 
+✅ Epoch 16/50 | Train Loss: 0.1582
+[2025-11-30 09:01:38] 📊 Validation Loss: 3.3942
+[2025-11-30 09:01:38] 📊 Validation Loss (Epoch 16): 3.3942
+[2025-11-30 09:01:40] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 09:19:12] 
+✅ Epoch 17/50 | Train Loss: 0.1528
+[2025-11-30 09:19:12] ⏭️ Skipping validation at epoch 17 for speed (keeping last val_loss=1.4113).
+[2025-11-30 09:19:14] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 09:36:49] 
+✅ Epoch 18/50 | Train Loss: 0.1473
+[2025-11-30 09:58:37] 📊 Validation Loss: 3.5654
+[2025-11-30 09:58:37] 📊 Validation Loss (Epoch 18): 3.5654
+[2025-11-30 09:58:39] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 10:16:15] 
+✅ Epoch 19/50 | Train Loss: 0.1423
+[2025-11-30 10:16:15] ⏭️ Skipping validation at epoch 19 for speed (keeping last val_loss=1.4113).
+[2025-11-30 10:16:16] 💾 Saved checkpoint: checkpoints_weight_unfreeze/last_epoch.ckpt
+[2025-11-30 10:33:55] 
+✅ Epoch 20/50 | Train Loss: 0.1376

@@ -1,5 +1,6 @@
 # train_fusion_vqa.py
 import os
+import argparse
 import random
 import numpy as np
 import torch
@@ -8,10 +9,43 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 import datetime
-from torch.cuda.amp import autocast, GradScaler
+# from torch.cuda.amp import autocast, GradScaler
+# TODO : PRETRAINED VilT , fine-tuned LXMERT AND VICE-VERSA (LAYER'S FROZEN)
+
+from torch.amp import autocast, GradScaler
 
 from vqa_dataset import VQADataset
 from vilt_lxmert_fusion import ViLT_LXMERT_Fusion
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--batch_size", type=int, default=64)
+parser.add_argument("--epochs", type=int, default=50)
+parser.add_argument("--lr", type=float, default=1e-4)
+
+parser.add_argument("--train_csv", type=str, default="Dataset/dataset_train2014_with_cp.csv")
+parser.add_argument("--train_images", type=str, default="Dataset/train2014/")
+parser.add_argument("--feature_dir", type=str, default="extracted_feats")
+
+parser.add_argument("--val_csv", type=str, default="Dataset/dataset_Val2014_with_cp.csv")
+parser.add_argument("--val_images", type=str, default="Dataset/val2014/")
+parser.add_argument("--val_feature_dir", type=str, default="extracted_feats_val")
+
+parser.add_argument("--max_samples", type=int, default=None)
+parser.add_argument("--val_max_samples", type=int, default=None)
+
+parser.add_argument("--num_answers", type=int, default=1000)
+parser.add_argument("--freeze_encoders", type=bool, default=True)
+
+parser.add_argument("--checkpoint_dir", type=str, default="checkpoints_weight_unfreeze")
+parser.add_argument("--log_file", type=str, default="training_log_new_newer.txt")
+
+parser.add_argument("--mode", type=str, default="fuse", choices=["vilt", "lxmert", "fuse"])
+
+parser.add_argument("--num_workers", type=int, default=0, help="0 means use all CPU cores (os.cpu_count()).")
+parser.add_argument("--prefetch_factor", type=int, default=2)
+
+args = parser.parse_args()
 
 # ==== Setup ====
 SEED = 42
@@ -22,30 +56,39 @@ torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = False
 torch.backends.cudnn.benchmark = True
 
+# Interpret num_workers=0 as "use all available CPU cores"
+NUM_WORKERS = args.num_workers if args.num_workers > 0 else os.cpu_count()
+PREFETCH = args.prefetch_factor
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # === Hyperparams ===
-BATCH_SIZE = 64
-EPOCHS = 50
-LR = 1e-4
-DATASET_CSV = "Dataset/dataset_train2014_with_cp.csv"
-IMAGE_ROOT = "Dataset/train2014/"
-FEATURE_DIR = "extracted_feats"
-NUM_ANSWERS = 1000
-MAX_SAMPLES = None
-VAL_MAX_SAMPLE = None
+BATCH_SIZE = args.batch_size
+EPOCHS = args.epochs
+LR = args.lr
 
-os.makedirs("checkpoints_new_train_newer", exist_ok=True)
-LAST_EPOCH_CKPT = "checkpoints_new_train_newer/last_epoch.ckpt"
-BEST_MODEL_CKPT = "checkpoints_new_train_newer/best_model.ckpt"
+DATASET_CSV = args.train_csv
+IMAGE_ROOT = args.train_images
+FEATURE_DIR = args.feature_dir
+
+NUM_ANSWERS = args.num_answers
+MAX_SAMPLES = args.max_samples
+VAL_MAX_SAMPLE = args.val_max_samples
+
+# === Checkpoints (from parser) ===
+os.makedirs(args.checkpoint_dir, exist_ok=True)
+LAST_EPOCH_CKPT = os.path.join(args.checkpoint_dir, "last_epoch.ckpt")
+BEST_MODEL_CKPT = os.path.join(args.checkpoint_dir, "best_model.ckpt")
+
 
 def log_msg(msg):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{timestamp}] {msg}\n"
     print(line.strip())
-    with open("training_log_new_newer.txt", "a") as f:
+    with open(args.log_file, "a") as f:  # now parser driven
         f.write(line)
+
 
 # === Collate function (robust) ===
 def collate_fn(batch):
@@ -78,20 +121,44 @@ def collate_fn(batch):
 # === Load data ===
 print("Loading Dataset...")
 train_dataset = VQADataset(DATASET_CSV, IMAGE_ROOT, max_samples=MAX_SAMPLES, feature_dir=FEATURE_DIR)
-train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True)
+# train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True)
+train_loader = DataLoader(
+    train_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=True,
+    collate_fn=collate_fn,
+    num_workers=NUM_WORKERS,
+    pin_memory=True,
+    prefetch_factor=PREFETCH,
+    persistent_workers=True
+)
 
-VAL_CSV = "Dataset/dataset_Val2014_with_cp.csv"
-VAL_IMAGE_ROOT = "Dataset/val2014/"
-VAL_FEATURE_DIR = "extracted_feats_val"
+VAL_CSV = args.val_csv
+VAL_IMAGE_ROOT = args.val_images
+VAL_FEATURE_DIR = args.val_feature_dir
 val_dataset = VQADataset(VAL_CSV, VAL_IMAGE_ROOT, max_samples=VAL_MAX_SAMPLE, feature_dir=VAL_FEATURE_DIR)
-val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True)
+# val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=os.cpu_count(), pin_memory=True, prefetch_factor=4, persistent_workers=True)
+val_loader = DataLoader(
+    val_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=False,
+    collate_fn=collate_fn,
+    num_workers=NUM_WORKERS,
+    pin_memory=True,
+    prefetch_factor=PREFETCH,
+    persistent_workers=True
+)
 
 print(f"Validation dataset size: {len(val_dataset)}")
 if len(train_dataset) == 0:
     raise RuntimeError("No samples in dataset. Check CSV and paths.")
 
 # === Model ===
-model = ViLT_LXMERT_Fusion(num_answers=NUM_ANSWERS, freeze_encoders=True).to(device)
+model = ViLT_LXMERT_Fusion(
+    num_answers=NUM_ANSWERS,
+    freeze_encoders=args.freeze_encoders,
+).to(device)
+
 criterion = nn.CrossEntropyLoss()
 trainable_params = [p for p in model.parameters() if p.requires_grad]
 optimizer = torch.optim.AdamW(trainable_params, lr=LR)
@@ -147,7 +214,6 @@ def evaluate(model, dataloader, criterion, device):
         return float("inf")
 
     avg_loss = total_loss / steps
-    print(f"📊 Validation Loss: {avg_loss:.4f}")
     log_msg(f"📊 Validation Loss: {avg_loss:.4f}")
     return avg_loss
 
@@ -156,7 +222,7 @@ for epoch in range(start_epoch, EPOCHS):
     model.train()
     total_loss = 0.0
     steps = 0
-    scaler = GradScaler()
+    scaler = GradScaler('cuda')
     pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS}", ncols=120)
     for batch in pbar:
         if batch is None:
@@ -176,7 +242,7 @@ for epoch in range(start_epoch, EPOCHS):
             uses_real_feats = False
 
         optimizer.zero_grad()
-        with autocast():
+        with autocast('cuda'):
             try:
                 logits = model(vilt_inputs, lxmert_inputs,
                             visual_feats=visual_feats,
@@ -185,6 +251,7 @@ for epoch in range(start_epoch, EPOCHS):
                 print(f"[Forward Error] {ex}. Skipping batch.")
                 continue
             loss = criterion(logits, labels)
+        # torch.amp.autocast('cuda', args...)
 
         scaler.scale(loss).backward()
         scaler.step(optimizer)
@@ -202,7 +269,6 @@ for epoch in range(start_epoch, EPOCHS):
         continue
 
     avg_train_loss = total_loss / steps
-    print(f"\n✅ Epoch {epoch+1}/{EPOCHS} | Train Loss: {avg_train_loss:.4f}")
     log_msg(f"\n✅ Epoch {epoch+1}/{EPOCHS} | Train Loss: {avg_train_loss:.4f}")
 
     do_validation = (epoch + 1) % 2 == 0
@@ -235,7 +301,6 @@ for epoch in range(start_epoch, EPOCHS):
         }, BEST_MODEL_CKPT)
         log_msg(f"🏆 New Best Model Saved (val_loss={val_loss_to_save:.4f})")
 
-print("🎉 Training Complete!")
 log_msg("🎉 Training Complete!")
 
 for loader in [train_loader, val_loader]:

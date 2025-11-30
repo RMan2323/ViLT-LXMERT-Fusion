@@ -6,6 +6,7 @@ from tqdm import tqdm
 from transformers import LxmertModel
 from vqa_dataset import VQADataset
 
+# TODO: Parser
 # === Config ===
 BATCH_SIZE = 64
 EPOCHS = 20
@@ -20,10 +21,12 @@ NUM_ANSWERS = 1000
 MAX_SAMPLES = None
 VAL_MAX_SAMPLE = None
 VAL_EVERY = 2  # validate every N epochs
+CKPT_ROOT = "checkpoints_lxmert"
 
 LOG_FILE = "lxmert_training_log.txt"
-LAST_EPOCH_CKPT = "checkpoints_lxmert/last_lxmert_head.ckpt"
-BEST_MODEL_CKPT  = "checkpoints_lxmert/best_lxmert_head.ckpt"
+os.makedirs(CKPT_ROOT, exist_ok=True)
+LAST_EPOCH_CKPT = f"{CKPT_ROOT}/last_lxmert_head.ckpt"
+BEST_MODEL_CKPT  = f"{CKPT_ROOT}/best_lxmert_head.ckpt"
 
 # === Logger ===
 def log_msg(msg):

@@ -24,9 +24,6 @@ class VQADataset(Dataset):
         self.image_root = image_root
         self.feature_dir = feature_dir
 
-        # ================================
-        #   PROCESSORS
-        # ================================
         self.vilt_processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-mlm")
 
         # 🔥 VERY IMPORTANT: Disable ALL image transforms
@@ -39,9 +36,7 @@ class VQADataset(Dataset):
 
         self.lxmert_tokenizer = LxmertTokenizer.from_pretrained("unc-nlp/lxmert-base-uncased")
 
-        # ================================
         #   MANUAL IMAGE -> TENSOR
-        # ================================
         self.transform = transforms.Compose([
             transforms.Resize((384, 384)),
             transforms.ToTensor(),     # produces tensor in [0,1]
@@ -54,10 +49,6 @@ class VQADataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-
-    # ============================================================
-    #  LOAD .PT REGION FEATURES  (same code, no change)
-    # ============================================================
     def _load_preextracted_feats(self, image_path):
         base = os.path.splitext(os.path.basename(image_path))[0]
         candidates = [
@@ -102,9 +93,6 @@ class VQADataset(Dataset):
         return feats, boxes
 
 
-    # ============================================================
-    #  MAIN GETITEM (this is where we fixed everything)
-    # ============================================================
     def __getitem__(self, idx):
         row = self.data.iloc[idx]
         image_path = os.path.join(self.image_root, os.path.basename(row["image_path"]))

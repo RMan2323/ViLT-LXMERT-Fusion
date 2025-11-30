@@ -11,6 +11,7 @@ from tqdm import tqdm
 from transformers import ViltModel
 from vqa_dataset import VQADataset
 
+# TODO: Parser
 # === Config ===
 BATCH_SIZE = 64
 EPOCHS = 15
@@ -24,10 +25,13 @@ VAL_FEATURE_DIR = "extracted_feats_val"
 NUM_ANSWERS = 1000
 MAX_SAMPLES = None
 VAL_MAX_SAMPLE = None
+CKPT_ROOT = "checkpoints_vilt"
 
 LOG_FILE = "vilt_training_log.txt"
-LAST_EPOCH_CKPT = "checkpoints_vilt/last_vilt_head.ckpt"
-BEST_MODEL_CKPT  = "checkpoints_vilt/best_vilt_head.ckpt"
+
+os.makedirs(CKPT_ROOT, exist_ok=True)
+LAST_EPOCH_CKPT = f"{CKPT_ROOT}/last_vilt_head.ckpt"
+BEST_MODEL_CKPT  = f"{CKPT_ROOT}/best_vilt_head.ckpt"
 VAL_EVERY = 2  # validate every N epochs for speed
 
 # === Utility Logging ===
@@ -75,7 +79,8 @@ head = nn.Sequential(
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.AdamW(head.parameters(), lr=LR)
-scaler = torch.cuda.amp.GradScaler()  # ✅ mixed precision
+scaler = torch.amp.GradScaler('cuda')
+# scaler = torch.cuda.amp.GradScaler()  # ✅ mixed precision
 os.makedirs("checkpoints_vilt", exist_ok=True)
 
 best_loss = float("inf")
@@ -109,7 +114,8 @@ for epoch in range(EPOCHS):
         labels = batch["answer_idx"].long().to(device, non_blocking=True)
 
         optimizer.zero_grad(set_to_none=True)
-        with torch.cuda.amp.autocast():
+        
+        with torch.amp.autocast('cuda'):
             out = vilt(**inputs, return_dict=True)
             logits = head(out.pooler_output)
             loss = criterion(logits, labels)

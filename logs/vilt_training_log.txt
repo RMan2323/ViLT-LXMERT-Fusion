@@ -1,0 +1,38 @@
+[2025-11-26 03:21:35] Epoch 1: Train 0.0418/39.05% (Validation skipped, last best_loss=inf)
+[2025-11-26 03:21:36] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 03:54:31] Epoch 2: Train 0.0319/45.05% | Val 0.0301/46.86%
+[2025-11-26 03:54:31] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 03:54:32] 🏆 New Best Model Saved (val_loss=0.0301)
+[2025-11-26 04:10:39] Epoch 3: Train 0.0289/47.60% (Validation skipped, last best_loss=0.0301)
+[2025-11-26 04:10:40] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 04:43:17] Epoch 4: Train 0.0273/49.23% | Val 0.0273/49.58%
+[2025-11-26 04:43:18] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 04:43:19] 🏆 New Best Model Saved (val_loss=0.0273)
+[2025-11-26 04:59:33] Epoch 5: Train 0.0262/50.32% (Validation skipped, last best_loss=0.0273)
+[2025-11-26 04:59:34] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 05:32:01] Epoch 6: Train 0.0253/51.17% | Val 0.0261/50.82%
+[2025-11-26 05:32:02] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 05:32:03] 🏆 New Best Model Saved (val_loss=0.0261)
+[2025-11-26 05:48:19] Epoch 7: Train 0.0246/52.00% (Validation skipped, last best_loss=0.0261)
+[2025-11-26 05:48:19] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 06:20:47] Epoch 8: Train 0.0240/52.58% | Val 0.0254/51.76%
+[2025-11-26 06:20:48] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 06:20:49] 🏆 New Best Model Saved (val_loss=0.0254)
+[2025-11-26 06:36:59] Epoch 9: Train 0.0235/53.17% (Validation skipped, last best_loss=0.0254)
+[2025-11-26 06:37:00] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 07:09:40] Epoch 10: Train 0.0231/53.64% | Val 0.0250/52.17%
+[2025-11-26 07:09:41] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 07:09:42] 🏆 New Best Model Saved (val_loss=0.0250)
+[2025-11-26 07:25:51] Epoch 11: Train 0.0226/54.20% (Validation skipped, last best_loss=0.0250)
+[2025-11-26 07:25:52] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 07:58:29] Epoch 12: Train 0.0223/54.59% | Val 0.0247/52.79%
+[2025-11-26 07:58:30] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 07:58:31] 🏆 New Best Model Saved (val_loss=0.0247)
+[2025-11-26 08:14:52] Epoch 13: Train 0.0219/55.00% (Validation skipped, last best_loss=0.0247)
+[2025-11-26 08:14:53] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 08:47:35] Epoch 14: Train 0.0216/55.52% | Val 0.0246/52.82%
+[2025-11-26 08:47:36] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 08:47:37] 🏆 New Best Model Saved (val_loss=0.0246)
+[2025-11-26 09:20:22] Epoch 15: Train 0.0213/55.79% | Val 0.0245/53.05%
+[2025-11-26 09:20:23] 💾 Saved checkpoint: checkpoints_vilt/last_vilt_head.ckpt
+[2025-11-26 09:20:24] 🏆 New Best Model Saved (val_loss=0.0245)

@@ -6,19 +6,17 @@ from transformers import ViltModel, LxmertModel
 
 class ViLT_LXMERT_Fusion(nn.Module):
     def __init__(self, num_answers=1000, hidden_dim=768, fusion_dim=1024,
-                 num_regions=36, project_to_dim=2048, freeze_encoders=True):
+                 num_regions=36, project_to_dim=2048, freeze_encoders=True):  # TODO: get finetuning true or not
         super().__init__()
 
         self.num_regions = num_regions
         self.project_to_dim = project_to_dim
         self.hidden_dim = hidden_dim
 
-        # === Load pretrained encoders (ONLY pretrained, as you requested) ===
         self.vilt = ViltModel.from_pretrained("dandelin/vilt-b32-mlm")
         self.lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased")
 
-        # === REMOVE loading Priyanshu’s fine-tuned weights (you asked to disable this) ===
-        
+        # TODO: if finetuning:
         try:
             vilt_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
             lxmert_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")

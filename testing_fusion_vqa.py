@@ -77,7 +77,7 @@ criterion = nn.CrossEntropyLoss()
 # Load Fine-Tuned ViLT + Head
 # ============================================================
 vilt = ViltModel.from_pretrained("dandelin/vilt-b32-mlm").to(device)
-vilt_head_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location=device)
+vilt_head_ckpt = torch.load("checkpoints_old/checkpoints_vilt/best_vilt_head.ckpt", map_location=device)
 
 vilt.load_state_dict(vilt_head_ckpt["vilt_state"], strict=False)
 
@@ -103,7 +103,7 @@ if hasattr(vilt_processor.image_processor, "do_rescale"):
 lxmert = LxmertModel.from_pretrained("unc-nlp/lxmert-base-uncased").to(device)
 lxmert_tokenizer = LxmertTokenizer.from_pretrained("unc-nlp/lxmert-base-uncased")
 
-lx_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location=device)
+lx_ckpt = torch.load("checkpoints_old/checkpoints_lxmert/best_lxmert_head.ckpt", map_location=device)
 lxmert.load_state_dict(lx_ckpt["lxmert_state"], strict=False)
 
 lxmert_classifier = nn.Sequential(
@@ -143,7 +143,8 @@ fusion = ViLT_LXMERT_Fusion(
     freeze_encoders=True
 ).to(device)
 
-fusion_ckpt = torch.load("checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
+# fusion_ckpt = torch.load("checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
+fusion_ckpt = torch.load("checkpoints_weight_unfreeze/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
 fusion.load_state_dict(fusion_ckpt["model_state_dict"], strict=False)
 print("✅ Loaded fine-tuned fusion head")
 
@@ -273,7 +274,7 @@ def evaluate(model_type, loader):
     return 100 * correct / total, running_loss / total
 
 def run_eval_for(csv_path, csv_name, image_root, feature_dir):
-    print(f"\n========== Evaluating on {csv_name} ==========")
+    # print(f"\n========== Evaluating on {csv_name} ==========")
     log_msg(f"\n========== Evaluating on {csv_name} ==========")
     
         # Shutdown old workers (IMPORTANT)
@@ -304,7 +305,7 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
     model_list = [
         # "ViLT",
         # "LXMERT",
-        # "Fusion",
+    #    "Fusion",
         "ViLT_pretrained",
         "LXMERT_pretrained"
     ]
@@ -314,7 +315,7 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
     for m in model_list:
         acc, loss = evaluate(m, val_loader)
         results[m] = (acc, loss)
-        print(f"{m}: {acc:.2f}% | Loss: {loss:.4f}")
+        # print(f"{m}: {acc:.2f}% | Loss: {loss:.4f}")
         log_msg(f"{m}: {acc:.2f}% | Loss: {loss:.4f}")
 
 
@@ -345,29 +346,3 @@ results_val = run_eval_for(
 
 log_msg("TEST RESULTS: " + str(results_test))
 log_msg("VAL RESULTS: " + str(results_val))
-
-# # ============================================================
-# # RUN all evaluations
-# # ============================================================
-# vilt_acc, vilt_loss = evaluate("ViLT")
-# lx_acc, lx_loss = evaluate("LXMERT")
-# vilt_pre_acc, vilt_pre_loss = evaluate("ViLT_pretrained")
-# lx_pre_acc, lx_pre_loss = evaluate("LXMERT_pretrained")
-
-# fusion_acc, fusion_loss = evaluate("Fusion")
-
-
-# print("\n📊 Comparative Results:")
-# print(f"ViLT    → {vilt_acc:.2f}% | Loss: {vilt_loss:.4f}")
-# print(f"LXMERT  → {lx_acc:.2f}% | Loss: {lx_loss:.4f}")
-# print(f"ViLT (pretrained) → {vilt_pre_acc:.2f}% | Loss: {vilt_pre_loss:.4f}")
-# print(f"LXMERT (pretrained) → {lx_pre_acc:.2f}% | Loss: {lx_pre_loss:.4f}")
-# print(f"Fusion  → {fusion_acc:.2f}% | Loss: {fusion_loss:.4f}")
-
-
-# log_msg("\n📊 Comparative Results:")
-# log_msg(f"ViLT    → {vilt_acc:.2f}% | Loss: {vilt_loss:.4f}")
-# log_msg(f"LXMERT  → {lx_acc:.2f}% | Loss: {lx_loss:.4f}")
-# log_msg(f"ViLT (pretrained) → {vilt_pre_acc:.2f}% | Loss: {vilt_pre_loss:.4f}")
-# log_msg(f"LXMERT (pretrained) → {lx_pre_acc:.2f}% | Loss: {lx_pre_loss:.4f}")
-# log_msg(f"Fusion  → {fusion_acc:.2f}% | Loss: {fusion_loss:.4f}")

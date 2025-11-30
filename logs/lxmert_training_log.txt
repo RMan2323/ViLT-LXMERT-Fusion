@@ -1,0 +1,43 @@
+[2025-11-28 17:59:30] Epoch 1: Train 0.0309/37.59% (Validation skipped, last best_loss=inf)
+[2025-11-28 17:59:30] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:12:21] Epoch 2: Train 0.0269/40.19% | Val 0.0268/40.43%
+[2025-11-28 18:12:23] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:12:24] 🏆 New Best Model Saved (val_loss=0.0268)
+[2025-11-28 18:19:38] Epoch 3: Train 0.0260/41.09% (Validation skipped, last best_loss=0.0268)
+[2025-11-28 18:19:39] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:32:15] Epoch 4: Train 0.0254/41.71% | Val 0.0265/41.03%
+[2025-11-28 18:32:16] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:32:17] 🏆 New Best Model Saved (val_loss=0.0265)
+[2025-11-28 18:39:34] Epoch 5: Train 0.0250/42.28% (Validation skipped, last best_loss=0.0265)
+[2025-11-28 18:39:36] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:52:10] Epoch 6: Train 0.0246/42.83% | Val 0.0264/41.72%
+[2025-11-28 18:52:11] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 18:52:13] 🏆 New Best Model Saved (val_loss=0.0264)
+[2025-11-28 18:59:26] Epoch 7: Train 0.0243/43.19% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 18:59:27] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:12:04] Epoch 8: Train 0.0240/43.57% | Val 0.0264/41.74%
+[2025-11-28 19:12:05] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:19:19] Epoch 9: Train 0.0237/43.90% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 19:19:20] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:31:53] Epoch 10: Train 0.0234/44.30% | Val 0.0265/42.03%
+[2025-11-28 19:31:55] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:39:07] Epoch 11: Train 0.0232/44.67% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 19:39:08] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:51:44] Epoch 12: Train 0.0230/44.92% | Val 0.0267/41.93%
+[2025-11-28 19:51:45] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 19:58:58] Epoch 13: Train 0.0228/45.31% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 19:58:59] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:11:34] Epoch 14: Train 0.0225/45.47% | Val 0.0270/42.03%
+[2025-11-28 20:11:36] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:18:50] Epoch 15: Train 0.0223/45.76% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 20:18:51] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:31:28] Epoch 16: Train 0.0222/46.04% | Val 0.0271/41.82%
+[2025-11-28 20:31:29] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:38:44] Epoch 17: Train 0.0220/46.37% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 20:38:45] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:51:21] Epoch 18: Train 0.0218/46.63% | Val 0.0273/42.15%
+[2025-11-28 20:51:23] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 20:58:37] Epoch 19: Train 0.0216/46.80% (Validation skipped, last best_loss=0.0264)
+[2025-11-28 20:58:38] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
+[2025-11-28 21:11:13] Epoch 20: Train 0.0215/47.11% | Val 0.0275/41.99%
+[2025-11-28 21:11:14] 💾 Saved checkpoint: checkpoints_lxmert/last_lxmert_head.ckpt
