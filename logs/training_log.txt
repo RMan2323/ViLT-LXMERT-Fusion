@@ -1,6 +1,7 @@
 
 
-----SHALLOW WITHOUT FINE TUNED--
+-------SHALLOW WITHOUT FINE TUNED----
+
 
 [2025-11-08 15:35:41] 
 ✅ Epoch 1/4 | Train Loss: 1.8858

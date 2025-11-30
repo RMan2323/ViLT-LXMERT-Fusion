@@ -18,8 +18,8 @@ class ViLT_LXMERT_Fusion(nn.Module):
 
         # TODO: if finetuning:
         try:
-            vilt_ckpt = torch.load("checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
-            lxmert_ckpt = torch.load("checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
+            vilt_ckpt = torch.load("checkpoints_old/checkpoints_vilt/best_vilt_head.ckpt", map_location="cpu")
+            lxmert_ckpt = torch.load("checkpoints_old/checkpoints_lxmert/best_lxmert_head.ckpt", map_location="cpu")
             self.vilt.load_state_dict(vilt_ckpt["vilt_state"], strict=False)
             self.lxmert.load_state_dict(lxmert_ckpt["lxmert_state"], strict=False)
             print("✅ Loaded fine-tuned ViLT & LXMERT encoder weights.")
@@ -28,7 +28,7 @@ class ViLT_LXMERT_Fusion(nn.Module):
             print("→ Falling back to pretrained encoders.")
         
 
-        print("🔵 Using PURE pretrained ViLT & pretrained LXMERT for fusion.")
+        # print("🔵 Using PURE pretrained ViLT & pretrained LXMERT for fusion.")
 
         # === Freeze encoders if requested ===
         if freeze_encoders:
@@ -41,14 +41,14 @@ class ViLT_LXMERT_Fusion(nn.Module):
         self.vilt_to_lxmert_proj = nn.Linear(hidden_dim, self.project_to_dim)
 
         # === SMALL FUSION MLP (your requested network) ===
-        """
-        self.fusion = nn.Sequential(
-            nn.Linear(2 * hidden_dim, fusion_dim),
-            nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(fusion_dim, num_answers)
-        )
-        """
+        
+        # self.fusion = nn.Sequential(
+        #     nn.Linear(2 * hidden_dim, fusion_dim),
+        #     nn.ReLU(),
+        #     nn.Dropout(0.3),
+        #     nn.Linear(fusion_dim, num_answers)
+        # )
+        
 
         # === BIG MLP (commented out, as you asked) ===
         

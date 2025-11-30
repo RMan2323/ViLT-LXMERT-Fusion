@@ -1,3 +1,5 @@
+-------FALTU--
+
 [2025-11-11 20:36:08] 
 ✅ Epoch 1/10 | Train Loss: 6.9251
 [2025-11-11 20:36:08] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
@@ -61,6 +63,9 @@
 
 
 
+
+
+------------FREEZED WEIGHTS---------(DEEP NEURAL WITH FINE-TUNED)
 
 
 
@@ -191,7 +196,9 @@
 
 
 
-Weights unfreeze
+-------Weights unfreeze------
+
+
 
 ✅ Epoch 1/50 | Train Loss: 1.8238
 [2025-11-25 20:57:38] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).

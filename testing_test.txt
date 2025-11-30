@@ -1,37 +1,78 @@
+---------PRETRAINED----------------------(HEAD, 7..., NUM_ANSWERS)
+
+========== Evaluating on VAL2014 ==========
+[2025-11-30 19:56:16] ViLT_pretrained: 0.01% | Loss: 0.1087
+[2025-11-30 20:04:27] LXMERT_pretrained: 0.02% | Loss: 0.1103
+[2025-11-30 20:04:27] VAL RESULTS: {'ViLT_pretrained': (0.014049970176950095, 0.10866516386698646), 'LXMERT_pretrained': (0.018291470607727484, 0.11026187677539535)}
+
+
 ------------FINE-TUNED---------------------
+
 [2025-11-30 11:00:55] 
-========== Evaluating on TEST2015 ==========
-[2025-11-30 11:20:44] ViLT: 38.17% | Loss: 0.0392
-[2025-11-30 11:30:30] LXMERT: 37.59% | Loss: 0.0363
-[2025-11-30 11:30:30] 
 ========== Evaluating on VAL2014 ==========
 [2025-11-30 11:47:12] ViLT: 51.77% | Loss: 0.0256
 [2025-11-30 11:55:10] LXMERT: 41.17% | Loss: 0.0268
-[2025-11-30 11:55:10] TEST RESULTS: {'ViLT': (38.170538619406734, 0.03922379296109312), 'LXMERT': (37.58656343444404, 0.0363386415192922)}
 [2025-11-30 11:55:10] VAL RESULTS: {'ViLT': (51.76724766386109, 0.025579784159964033), 'LXMERT': (41.16959374378686, 0.026756513354492136)}
 
 
 
------------FUSION-------------------------(LAYERS UNFROZEN,  FINE-TUNED VALUES WITH LARGE NEURAL NETWORK)
+
+
+
+---------AT START ---------- PRETRAINED SHALLOW ---> training_log.txt (GRAPH)
+
+
+[2025-12-01 00:52:44] 
+========== Evaluating on VAL2014 ==========
+[2025-12-01 01:14:31] Fusion: 52.84% | Loss: 0.0236
+[2025-12-01 01:14:31] VAL RESULTS: {'Fusion': (52.84273311684008, 0.02364052554107232)}
+
+
+
+
+###
+
+
+
+
+
+
+---------------------- FINE-TUNED VALUES WITH LARGE NEURAL NETWORK (FREEZED)-----------------> training_log_new_newer.txt----------FREEZED WEIGHTS---------(DEEP NEURAL WITH FINE-TUNED)
+
+
+========== Evaluating on VAL2014 ==========
+[2025-11-21 20:15:22] Fusion: 53.33% | Loss: 0.0226		#  FINE-TUNED VALUES WITH LARGE NEURAL NETWORK
+[2025-11-21 20:15:22] VAL RESULTS: {'Fusion': (53.32758963483332, 0.022625685913898227)}
+[2025-11-21 20:21:29] 
+
+
+
+
+
+-----------FUSION-------------------------(LAYERS UNFROZEN,  FINE-TUNED VALUES WITH LARGE NEURAL NETWORK) -> 2 files ./training_log_new_newer.txt ../training_log_new_newer.txt
 [2025-11-30 14:04:51] 
-========== Evaluating on TEST2015 ==========
-[2025-11-30 14:30:54] Fusion: 32.12% | Loss: 0.0413
-[2025-11-30 14:30:54] 
 ========== Evaluating on VAL2014 ==========
 [2025-11-30 14:52:53] Fusion: 55.37% | Loss: 0.0225
-[2025-11-30 14:52:53] TEST RESULTS: {'Fusion': (32.1217616175331, 0.04131316152557643)}
-[2025-11-30 14:52:53] VAL RESULTS: {'Fusion': (55.370402279806484, 0.0224934943327966)}
-[2025-11-30 19:10:00] 
 
 
----------PRETRAINED----------------------(HEAD, 7..., NUM_ANSWERS)
 
-========== Evaluating on TEST2015 ==========
-[2025-11-30 19:29:51] ViLT_pretrained: 0.05% | Loss: 0.1087
-[2025-11-30 19:39:31] LXMERT_pretrained: 0.00% | Loss: 0.1119
-[2025-11-30 19:39:31] 
+
+
+-----INCREASE LAYERS------- (PRETRAINED) ----> training_log_new.txt (GRAPH)
+
+
+[2025-12-01 01:20:30] 
 ========== Evaluating on VAL2014 ==========
-[2025-11-30 19:56:16] ViLT_pretrained: 0.01% | Loss: 0.1087
-[2025-11-30 20:04:27] LXMERT_pretrained: 0.02% | Loss: 0.1103
-[2025-11-30 20:04:27] TEST RESULTS: {'ViLT_pretrained': (0.05136301818027526, 0.10874688797869744), 'LXMERT_pretrained': (0.0, 0.11189200452928469)}
-[2025-11-30 20:04:27] VAL RESULTS: {'ViLT_pretrained': (0.014049970176950095, 0.10866516386698646), 'LXMERT_pretrained': (0.018291470607727484, 0.11026187677539535)}
+[2025-12-01 01:42:15] Fusion: 53.37% | Loss: 0.0226
+[2025-12-01 01:42:15] VAL RESULTS: {'Fusion': (53.36920935781033, 0.022632542243810633)}
+
+
+
+
+
+---------------------- FINE-TUNED VALUES WITH LARGE NEURAL NETWORK (FREEZED)-----------------> training_log_new_newer.txt----------FREEZED WEIGHTS---------(DEEP NEURAL WITH FINE-TUNED)
+
+
+
+[2025-12-01 01:46:37] 
+========== Evaluating on VAL2014 ==========

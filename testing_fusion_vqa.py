@@ -144,7 +144,9 @@ fusion = ViLT_LXMERT_Fusion(
 ).to(device)
 
 # fusion_ckpt = torch.load("checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
-fusion_ckpt = torch.load("checkpoints_weight_unfreeze/best_model.ckpt", map_location=device) # checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
+fusion_ckpt = torch.load("checkpoints_old/checkpoints_train_on_fine_tuned_deeper/best_model.ckpt", map_location=device) 
+# checkpoints_train_on_fine_tuned_deeper # checkpoints_old_at_start
+# TODO: THE BEST checkpoints_old/checkpoints_inc_layers/best_model.ckpt -> checkpoints_weights_unfreeze/best_model.ckpt
 fusion.load_state_dict(fusion_ckpt["model_state_dict"], strict=False)
 print("✅ Loaded fine-tuned fusion head")
 
@@ -296,7 +298,7 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
         val_dataset,
         batch_size=BATCH_SIZE,
         shuffle=False,
-        num_workers=os.cpu_count(),
+        num_workers=min(8,os.cpu_count()),
         prefetch_factor=4,
         pin_memory=True,
         persistent_workers=True
@@ -305,9 +307,9 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
     model_list = [
         # "ViLT",
         # "LXMERT",
-    #    "Fusion",
-        "ViLT_pretrained",
-        "LXMERT_pretrained"
+       "Fusion",
+        # "ViLT_pretrained",
+        # "LXMERT_pretrained"
     ]
 
     results = {}
@@ -325,12 +327,12 @@ def run_eval_for(csv_path, csv_name, image_root, feature_dir):
 # RUN evaluations on BOTH CSV files
 # ============================================================
 
-results_test = run_eval_for(
-    "Dataset/dataset_test2015.csv",
-    "TEST2015",
-    "Dataset/test2015/",
-    "extracted_feats_test"
-)
+# results_test = run_eval_for(
+#     "Dataset/dataset_test2015.csv",
+#     "TEST2015",
+#     "Dataset/test2015/",
+#     "extracted_feats_test"
+# )
 
 results_val = run_eval_for(
     "Dataset/dataset_Val2014_with_cp.csv",
@@ -344,5 +346,5 @@ results_val = run_eval_for(
 # FEATURE_DIR = "extracted_feats_test" # extracted_feats_val
 
 
-log_msg("TEST RESULTS: " + str(results_test))
+# log_msg("TEST RESULTS: " + str(results_test))
 log_msg("VAL RESULTS: " + str(results_val))

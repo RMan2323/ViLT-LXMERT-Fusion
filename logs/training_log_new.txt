@@ -1,3 +1,8 @@
+---------------------------NOT FINE TUNED (MORE LAYERS)----------------------
+
+
+
+
 [2025-11-11 14:26:05] 
 ✅ Epoch 1/50 | Train Loss: 1.8926
 [2025-11-11 14:26:05] ⏭️ Skipping validation at epoch 1 for speed (keeping last val_loss=inf).
